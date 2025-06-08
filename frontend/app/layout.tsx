@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en"
           className={`${pixels.className}`}
     >
-      <body>
+      <body className='bg-main-bg text-white'>
         {children}
       </body>
     </html>
