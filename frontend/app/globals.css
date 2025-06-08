@@ -1,11 +1,26 @@
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 }
 
+
 .flex-center {
-  @apply flex justify-center items-center;
+    @apply flex justify-center items-center;
+}
+
+.flex-between {
+    @apply flex justify-between items-center;
+}
+
+@theme {
+    --color-main-bg: #171B22;
+    --color-secondary-bg: #1C212A;
+    --color-main-purple: #C538A7;
+    --color-main-green: #00A23E
+
 }
