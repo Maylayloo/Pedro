@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import {Geist, Geist_Mono, Pixelify_Sans} from "next/font/google";
+import {Pixelify_Sans} from "next/font/google";
 import "./globals.css";
 
 const pixels = Pixelify_Sans({
-  variable: "--font-pixelify-sans",
+  variable: "--font-pixelify",
   subsets: ["latin"],
 });
 
@@ -18,10 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${pixels.variable}`}
-      >
+    <html lang="en"
+          className={`${pixels.className}`}
+    >
+      <body>
         {children}
       </body>
     </html>
