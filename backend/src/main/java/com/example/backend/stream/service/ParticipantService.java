@@ -12,9 +12,15 @@ import java.util.List;
 
 @Service
 public class ParticipantService {
+
+    private final ClientService clientService;
+    private final RoomServiceClient client;
     @Autowired
-    private ClientService clientService;
-    private RoomServiceClient client=clientService.getClient();
+    public ParticipantService(ClientService clientService,RoomServiceClient client) {
+        this.clientService = clientService;
+        this.client=client;
+
+    }
 
     public Call<List<LivekitModels.ParticipantInfo>> getAllByRoomName(String roomName) throws IOException {
         Call<List<LivekitModels.ParticipantInfo>> call = client.listParticipants(roomName);
