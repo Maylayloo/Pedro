@@ -1,19 +1,26 @@
 package com.example.backend.stream.service;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.livekit.server.RoomServiceClient;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Getter
 public class ClientService {
-    @Value("${LIVEKIT_API_KEY}")
-    private String apiKey;
+    private final String apiKey;
+    private final String apiSecret;
+    private final String url;
 
-    @Value("${LIVEKIT_API_SECRET}")
-    private String apiSecret;
-
-    @Value("${LIVEKIT_URL")
-    private String url;
+    public ClientService() {
+        Dotenv dotenv = Dotenv.configure()
+                .filename("development.env")
+                .load();
+        this.apiKey = dotenv.get("LIVEKIT_API_KEY");
+        this.apiSecret = dotenv.get("LIVEKIT_API_SECRET");
+        this.url = dotenv.get("majneurl");
+    }
 
     public RoomServiceClient getClient(){
         return RoomServiceClient.createClient(
