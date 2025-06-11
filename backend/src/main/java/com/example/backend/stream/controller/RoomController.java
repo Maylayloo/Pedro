@@ -16,14 +16,7 @@ import java.util.List;
 public class RoomController {
 
 
-    @Value("${LIVEKIT_API_KEY}")
-    private String apiKey;
 
-    @Value("${LIVEKIT_API_SECRET}")
-    private String apiSecret;
-
-    @Value("${LIVEKIT_URL")
-    private String url;
 
     private RoomService roomService;
 

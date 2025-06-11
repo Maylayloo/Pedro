@@ -14,10 +14,14 @@ import java.util.List;
 
 @Service
 public class RoomService {
+    private final ClientService clientService;
+    private final RoomServiceClient client;
     @Autowired
-    private ClientService clientService;
-    private RoomServiceClient client=clientService.getClient();
+    public RoomService(ClientService clientService,RoomServiceClient client) {
+        this.clientService = clientService;
+        this.client=client;
 
+    }
     public void createRoom(RoomDto dto) throws IOException {
         Call<LivekitModels.Room> call = client.createRoom(dto.getRoomName(),dto.getEmptyTimeOut(),dto.getMaxParticipant());
         Response<LivekitModels.Room> response = call.execute();
