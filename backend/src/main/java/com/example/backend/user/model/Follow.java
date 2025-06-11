@@ -9,9 +9,9 @@ public class Follow {
     private Long id;
 
     @ManyToOne
-    private User follower;
+    private MyUser follower;
 
     @ManyToOne
-    private User followed;
+    private MyUser followed;
 }
 

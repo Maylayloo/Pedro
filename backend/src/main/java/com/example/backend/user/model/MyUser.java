@@ -3,7 +3,7 @@ package com.example.backend.user.model;
 import jakarta.persistence.*;
 
 @Entity
-public class User {
+public class MyUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +24,10 @@ public class User {
     //@OneToOne(mappedBy = "user")
     //private Stream stream;
 
-    public User() {}
+    public MyUser() {}
 
 
-    public User(String email, String nickname, String password, int pedroCoin, String description, boolean status) {
+    public MyUser(String email, String nickname, String password, int pedroCoin, String description, boolean status) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
