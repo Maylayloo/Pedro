@@ -1,6 +1,6 @@
 import Link from "next/link";
-import {useState} from "react";
 import FollowingCard from "@/app/components/followingCard";
+import Footer from "@/app/components/footer";
 
 const Sidebar = () => {
 
@@ -45,12 +45,13 @@ const Sidebar = () => {
             pfp: "",
             status: "Offline",
         },
+
     ]
     // for now
     const loggedIn = true;
 
     return (
-        <section className="sticky left-0 top-0 flex h-screen w-fit flex-col justify-between py-6 px-2 items-center
+        <section className="sticky left-0 top-0 flex h-screen w-fit flex-col justify-between px-2 items-center
                  pt-24 text-white max-sm:hidden lg:w-[264px] bg-secondary-bg border-r-2 border-r-black">
 
             <span className='text-3xl mb-8'>OBSERWOWANI</span>
@@ -72,7 +73,12 @@ const Sidebar = () => {
                                 )
                             })
                         }
+                        {/*does not work yet*/}
+                        <button className='cursor-pointer text-main-purple'>
+                            - - - - - - pokaż więcej - - - - - -
+                        </button>
                     </div>
+
 
                 ) : (
                     <div className='flex flex-col flex-1 gap-6 items-center'>
@@ -85,6 +91,7 @@ const Sidebar = () => {
                     </div>
                 )
             }
+            <Footer/>
 
         </section>
     );
