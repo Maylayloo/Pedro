@@ -84,11 +84,11 @@ public class MyUser {
         this.status = status;
     }
 
-    public Long getUserId() {
+    public Long getId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setId(Long userId) {
         this.userId = userId;
     }
 }
