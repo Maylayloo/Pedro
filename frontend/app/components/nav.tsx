@@ -9,15 +9,17 @@ import Link from "next/link";
 const Nav = () => {
 
     // For now
-    const loggedIn = false;
+    const loggedIn = true;
 
     return (
         <nav
             className='flex-between fixed w-full px-6 py-4 lg:px-8 bg-secondary-bg h-18 z-50 border-b-2 border-b-black'>
-            <div className='flex items-center gap-1'>
-                <Image src={logo} alt="Pedro Logo" width={64} height={32}/>
-                <span className='text-4xl hidden md:block'>PEDRO</span>
-            </div>
+            <Link href='/'>
+                <div className='flex items-center gap-1'>
+                    <Image src={logo} alt="Pedro Logo" width={64} height={32}/>
+                    <span className='text-4xl hidden md:block'>PEDRO</span>
+                </div>
+            </Link>
 
             <SearchBar/>
             {
@@ -30,13 +32,13 @@ const Nav = () => {
                     </div>
                 ) : (
                     <div className='flex gap-4 items-center'>
-                    <Link href='/login' className='bg-main-gray auth-btn'>
-                        Zaloguj się
-                    </Link>
-                    <Link href='/register' className='bg-main-purple auth-btn hidden lg:block'>
-                        Zarejestruj się
-                    </Link>
-                </div>
+                        <Link href='/login' className='bg-main-gray auth-btn'>
+                            Zaloguj się
+                        </Link>
+                        <Link href='/register' className='bg-main-purple auth-btn hidden lg:block'>
+                            Zarejestruj się
+                        </Link>
+                    </div>
                 )
 
             }

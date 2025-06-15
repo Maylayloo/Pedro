@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import default_pfp from '@/public/profile.png'
+import Link from "next/link";
 
 interface props {
     name: string,
@@ -17,14 +18,16 @@ const FollowingCard = ({name, pfp, status, category, viewers}: props) => {
     return (
         <div className='flex gap-2 items-center'>
             <div>
-                <Image src={pfp || default_pfp} alt={`${name}\`s profile picture`} width={32} height={32}
-                className={`${status === "Offline" && 'grayscale'}`}/>
+                <Link href={`/${name}`}>
+                    <Image src={pfp || default_pfp} alt={`${name}\`s profile picture`} width={32} height={32}
+                           className={`${status === "Offline" && 'grayscale'}`}/>
+                </Link>
 
             </div>
 
             <div className="flex flex-col w-[50%]">
-                <span>{truncatedName}</span>
-                <span className='opacity-50 text-sm'>{truncatedCategory}</span>
+                <Link href={`/${name}`}>{truncatedName}</Link>
+                <Link href={`/category/${category}`} className='opacity-50 text-sm'>{truncatedCategory}</Link>
             </div>
 
             <div className="flex flex-col border-l-2 border-l-white pl-2">
