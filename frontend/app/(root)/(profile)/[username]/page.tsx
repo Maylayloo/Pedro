@@ -1,5 +1,3 @@
-'use client'
-
 import OfflineProfile from "@/app/(root)/(profile)/components/offlineProfile";
 import OnlineProfile from "@/app/(root)/(profile)/components/onlineProfile";
 
