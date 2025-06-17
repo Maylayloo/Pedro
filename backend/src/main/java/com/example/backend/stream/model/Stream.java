@@ -1,13 +1,11 @@
 package com.example.backend.stream.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @Entity
 public class Stream {
     @Id
@@ -16,13 +14,15 @@ public class Stream {
     String title;
     String descryption;
     String roomName;
+    String category;
     Long userId;
-    Stream(){}
+    public Stream(){}
 
-    public Stream(String title, String descryption, String roomName, Long userId) {
+    public Stream(String title, String descryption, String roomName, Long userId,String category) {
         this.title = title;
         this.descryption = descryption;
         this.roomName = roomName;
         this.userId = userId;
+        this.category=category;
     }
 }

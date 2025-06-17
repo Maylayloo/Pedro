@@ -15,8 +15,6 @@ import java.io.IOException;
 @RequestMapping("")
 public class LivekitTokenController {
 
-
-
     @Autowired
     private LiveKitTokenService tokenService;
 

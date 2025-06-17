@@ -24,19 +24,20 @@ public class RoomController {
         this.roomService = roomService;
     }
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody RoomDto dto) throws IOException {
+    public ResponseEntity<Void> createRoom(@RequestBody RoomDto dto) throws IOException {
         roomService.createRoom(dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> listRooms() throws IOException {
+    public ResponseEntity<List<RoomDto>> listRooms() throws IOException {
         List<LivekitModels.Room> rooms =roomService.listRooms();
+
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
     @DeleteMapping("/{roomName}")
-    public ResponseEntity<?> deleteRoom(@PathVariable String roomName) throws IOException {
+    public ResponseEntity<Void> deleteRoom(@PathVariable String roomName) throws IOException {
         roomService.deleteRoomByRoomName(roomName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
