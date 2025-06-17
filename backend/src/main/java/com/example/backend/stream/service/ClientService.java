@@ -1,6 +1,7 @@
 package com.example.backend.stream.service;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import io.livekit.server.IngressServiceClient;
 import io.livekit.server.RoomServiceClient;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,4 +30,9 @@ public class ClientService {
                 apiSecret);
         };
 
+    public IngressServiceClient getIngress(){
+        return IngressServiceClient.createClient(url,apiKey,apiSecret);
+
     }
+
+}
