@@ -34,9 +34,12 @@ public class RoomController {
         List<LivekitModels.Room> rooms =roomService.listRooms();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
+
     @DeleteMapping("/{roomName}")
-    public ResponseEntity<?> deleteRoom(@RequestParam String roomName) throws IOException {
+    public ResponseEntity<?> deleteRoom(@PathVariable String roomName) throws IOException {
         roomService.deleteRoomByRoomName(roomName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 }

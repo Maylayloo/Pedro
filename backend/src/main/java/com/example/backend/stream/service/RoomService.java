@@ -16,7 +16,7 @@ import java.util.List;
 public class RoomService {
     private final ClientService clientService;
     private final RoomServiceClient client;
-    @Autowired
+
     public RoomService(ClientService clientService,RoomServiceClient client) {
         this.clientService = clientService;
         this.client=client;
