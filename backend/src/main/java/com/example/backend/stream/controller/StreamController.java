@@ -2,10 +2,12 @@ package com.example.backend.stream.controller;
 
 import com.example.backend.stream.dto.ObsDataDto;
 import com.example.backend.stream.dto.StreamDto;
+import com.example.backend.stream.dto.StreamRequestDto;
 import com.example.backend.stream.service.StreamService;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class StreamController {
     }
 
     @PostMapping
-    public ResponseEntity<ObsDataDto> createStream(@RequestBody StreamDto dto) throws IOException {
+    public ResponseEntity<ObsDataDto> createStream(@RequestBody StreamRequestDto dto) throws IOException {
         return new ResponseEntity<>(streamService.createStreamAndReturnObsData(dto), HttpStatus.OK);
     }
 
@@ -32,7 +34,7 @@ public class StreamController {
 
     @DeleteMapping("/{roomName}")
     public ResponseEntity<Void> deleteStream(@PathVariable String roomName) throws IOException {
-        streamService.deleteStreamByStreamName(roomName);
+        streamService.deleteStreamByRoomName(roomName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -40,4 +42,7 @@ public class StreamController {
     public ResponseEntity<StreamDto> getStreamByRoomName(@PathVariable String roomName){
         return new ResponseEntity<>(streamService.getStreamByRoomName(roomName),HttpStatus.OK);
     }
+    
+
 }
+

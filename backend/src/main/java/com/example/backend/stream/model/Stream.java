@@ -5,7 +5,6 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
 @Entity
 public class Stream {
     @Id
@@ -15,14 +14,18 @@ public class Stream {
     String descryption;
     String roomName;
     String category;
+    Long creationTime;
+    String ingressId;
     Long userId;
     public Stream(){}
 
-    public Stream(String title, String descryption, String roomName, Long userId,String category) {
+    public Stream(String title, String descryption, String roomName, Long userId,String category,String ingressId) {
         this.title = title;
         this.descryption = descryption;
         this.roomName = roomName;
         this.userId = userId;
         this.category=category;
+        this.creationTime=System.currentTimeMillis();
+        this.ingressId=ingressId;
     }
 }

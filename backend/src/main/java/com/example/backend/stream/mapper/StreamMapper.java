@@ -7,14 +7,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class StreamMapper {
-    public static Stream toEntity(StreamDto dto){
-        return Stream.builder()
-                .title(dto.getTitle())
-                .descryption(dto.getDescryption())
-                .userId(dto.getUserId())
-                .roomName(dto.getRoomName())
-                .build();
-
+    public static Stream toEntity(StreamDto dto) {
+        Stream stream = new Stream();
+        stream.setTitle(dto.getTitle());
+        stream.setDescryption(dto.getDescryption());
+        stream.setUserId(dto.getUserId());
+        stream.setRoomName(dto.getRoomName());
+        stream.setCreationTime(dto.getCreationTime());
+        stream.setCategory(dto.getCategory());
+        stream.setIngressId(dto.getIngressId());
+        return stream;
     }
 
     public static List<StreamDto> toDtos(List<Stream> streams){
@@ -26,6 +28,8 @@ public class StreamMapper {
                     dto.setRoomName(stream.getRoomName());
                     dto.setCategory(stream.getCategory());
                     dto.setUserId(stream.getUserId());
+                    dto.setCreationTime(stream.getCreationTime());
+                    dto.setIngressId(stream.getIngressId());
                     return dto;
                 })
                 .collect(Collectors.toList());
