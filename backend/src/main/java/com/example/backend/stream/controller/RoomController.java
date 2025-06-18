@@ -1,6 +1,7 @@
 package com.example.backend.stream.controller;
 
 import com.example.backend.stream.dto.RoomDto;
+import com.example.backend.stream.mapper.RoomMapper;
 import com.example.backend.stream.service.RoomService;
 import livekit.LivekitModels;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/room")
@@ -32,8 +34,11 @@ public class RoomController {
     @GetMapping
     public ResponseEntity<List<RoomDto>> listRooms() throws IOException {
         List<LivekitModels.Room> rooms =roomService.listRooms();
+        List<RoomDto> roomDtos = rooms.stream()
+                .map(RoomMapper::convertToDto)
+                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(rooms, HttpStatus.OK);
+        return new ResponseEntity<>(roomDtos, HttpStatus.OK);
     }
 
     @DeleteMapping("/{roomName}")
