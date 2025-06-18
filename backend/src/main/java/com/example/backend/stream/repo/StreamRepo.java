@@ -16,7 +16,7 @@ public interface StreamRepo extends JpaRepository<Stream,Long> {
     @Transactional
     void deleteByRoomName(String roomName);
 
-    StreamDto findByRoomName(String roomName);
+    Stream findByRoomName(String roomName);
 
     @Query("SELECT s.creationTime FROM Stream s WHERE s.ingressId = :ingressId")
     Long getCreationTimeByIngress(@Param("ingressId") String ingressId);

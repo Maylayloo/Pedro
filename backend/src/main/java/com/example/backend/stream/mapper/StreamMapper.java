@@ -21,17 +21,19 @@ public class StreamMapper {
 
     public static List<StreamDto> toDtos(List<Stream> streams){
         return streams.stream()
-                .map(stream -> {
-                    StreamDto dto = new StreamDto();
-                    dto.setTitle(stream.getTitle());
-                    dto.setDescryption(stream.getDescryption());
-                    dto.setRoomName(stream.getRoomName());
-                    dto.setCategory(stream.getCategory());
-                    dto.setUserId(stream.getUserId());
-                    dto.setCreationTime(stream.getCreationTime());
-                    dto.setIngressId(stream.getIngressId());
-                    return dto;
-                })
+                .map(StreamMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public static StreamDto toDto(Stream stream){
+        StreamDto dto = new StreamDto();
+        dto.setTitle(stream.getTitle());
+        dto.setDescryption(stream.getDescryption());
+        dto.setRoomName(stream.getRoomName());
+        dto.setCategory(stream.getCategory());
+        dto.setUserId(stream.getUserId());
+        dto.setCreationTime(stream.getCreationTime());
+        dto.setIngressId(stream.getIngressId());
+        return dto;
     }
 }

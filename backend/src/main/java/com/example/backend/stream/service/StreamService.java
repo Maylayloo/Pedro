@@ -96,7 +96,7 @@ public class StreamService {
         }
 
     public StreamDto getStreamByRoomName(String roomName) {
-        return repo.findByRoomName(roomName);
+        return StreamMapper.toDto(repo.findByRoomName(roomName));
     }
 
 
