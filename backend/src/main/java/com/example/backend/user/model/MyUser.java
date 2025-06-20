@@ -19,6 +19,7 @@ public class MyUser {
     private int pedroCoin;
     private String description;
     private boolean status; // online or offline
+    private String profilePictureUrl;
     //potentialy followers, better to use external model for this
 
     //@OneToOne(mappedBy = "user")
@@ -27,13 +28,14 @@ public class MyUser {
     public MyUser() {}
 
 
-    public MyUser(String email, String nickname, String password, int pedroCoin, String description, boolean status) {
+    public MyUser(String email, String nickname, String password, int pedroCoin, String description, boolean status, String profilePictureUrl) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
         this.pedroCoin = pedroCoin;
         this.description = description;
         this.status = status;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public String getEmail() {
@@ -90,5 +92,13 @@ public class MyUser {
 
     public void setId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }

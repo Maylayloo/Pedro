@@ -11,6 +11,8 @@ public class RegisterMapper {
         user.setPassword(dto.getPassword());
         user.setNickname(dto.getUsername());
         user.setPedroCoin(0);
+        user.setDescription("");
+        user.setProfilePictureUrl("http://www.gravatar.com/avatar/?d=mp");
         return user;
     }
 }
