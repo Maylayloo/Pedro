@@ -7,6 +7,7 @@ import com.example.backend.user.repository.MyUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,8 @@ public class UserDataService {
 
     public Optional<MyUser> getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        MyUser user = (MyUser) auth.getPrincipal();
-        String email = user.getEmail();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        String email = userDetails.getUsername();
 
         return loadUserByEmail(email);
     }
