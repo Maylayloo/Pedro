@@ -1,16 +1,42 @@
 package com.example.backend.user.service;
 
+import com.example.backend.user.dto.RegisterDTO;
+import com.example.backend.user.mapper.RegisterMapper;
 import com.example.backend.user.model.MyUser;
 import com.example.backend.user.repository.MyUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserDataService {
     @Autowired
     public MyUserRepository MyUserRepository;
 
-    public MyUser getUserByEmail(String email){
-        return MyUserRepository.findByEmail(email).isPresent() ? MyUserRepository.findByEmail(email).get() : null;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+
+    public Optional<MyUser> loadUserByEmail(String email) {
+        return MyUserRepository.findByEmail(email);
+    }
+
+
+    public Optional<MyUser> getLoggedInUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUser user = (MyUser) auth.getPrincipal();
+        String email = user.getEmail();
+
+        return loadUserByEmail(email);
+    }
+
+    public void registerUser(RegisterDTO registerDTO) {
+        MyUser user = RegisterMapper.toEntity(registerDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        MyUserRepository.save(user);
     }
 }
