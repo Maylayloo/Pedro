@@ -2,6 +2,7 @@ package com.example.backend.user.controller;
 
 import com.example.backend.jwt.JwtUtil;
 import com.example.backend.user.dto.LoginRequestDTO;
+import com.example.backend.user.dto.RegisterDTO;
 import com.example.backend.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,18 @@ public class AuthController {
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid credentials");
+                    .body("Invalid username or password");
         }
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
+        try {
+            userDataService.registerUser(registerDTO);
+            return new ResponseEntity<>(Map.of("message", "User registered successfully"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
