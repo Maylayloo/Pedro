@@ -1,6 +1,8 @@
 package com.example.backend.jwt;
 
 import com.example.backend.user.service.UserDetailsServiceImpl;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +33,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            email = jwtUtil.extractEmail(token);
+            try {
+                email = jwtUtil.extractEmail(token);
+            } catch (ExpiredJwtException e) {
+                logger.warn("JWT token has expired: " + e.getMessage());
+            }catch (JwtException e) {
+                logger.warn("Invalid JWT token: " +  e.getMessage());
+            }
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
