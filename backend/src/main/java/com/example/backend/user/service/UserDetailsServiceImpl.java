@@ -25,6 +25,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         throw new UsernameNotFoundException(email);
 
     }
+
+    public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
+        Optional<MyUser> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return buildUser(user.get().getEmail(), user.get().getPassword(), "USER");
+        }
+        throw new UsernameNotFoundException("User not found with id: " + id);
+    }
+
     public UserDetails buildUser(String email,String password,String role){
         return User.builder()
                 .username(email)
