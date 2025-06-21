@@ -5,15 +5,18 @@ import com.example.backend.user.model.MyUser;
 public class UserProfileDTO {
     private Long id;
     private String email;
-    private String nickname;
+    private String username;
     private String description;
     private int pedroCoin;
     private String profilePictureUrl;
 
+
+    public UserProfileDTO() {}
+
     public UserProfileDTO(MyUser user) {
         this.id = user.getId();
         this.email = user.getEmail();
-        this.nickname = user.getNickname();
+        this.username = user.getNickname();
         this.description = user.getDescription();
         this.pedroCoin = user.getPedroCoin();
         this.profilePictureUrl = user.getProfilePictureUrl();
@@ -35,12 +38,12 @@ public class UserProfileDTO {
         this.email = email;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getDescription() {
