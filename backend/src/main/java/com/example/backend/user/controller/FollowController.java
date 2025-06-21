@@ -16,17 +16,17 @@ public class FollowController {
     private FollowService followService;
 
     @PostMapping("/{userId}")
-    public ResponseEntity<?> followUser(Long userId) {
+    public ResponseEntity<?> followUser(@PathVariable Long userId) {
         try {
             followService.followUser(userId);
             return ResponseEntity.ok("Followed successfully");
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> unfollowUser(Long userId) {
+    public ResponseEntity<?> unfollowUser(@PathVariable Long userId) {
         try {
             followService.unfollowUser(userId);
             return ResponseEntity.ok("Unfollowed successfully");
