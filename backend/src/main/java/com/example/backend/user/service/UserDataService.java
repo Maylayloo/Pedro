@@ -36,8 +36,20 @@ public class UserDataService {
     }
 
     public void registerUser(RegisterDTO registerDTO) {
+        if (MyUserRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("User with this email already exists");
+        }
+
+        if (MyUserRepository.findByNickname(registerDTO.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("User with this nickname already exists");
+        }
+
         MyUser user = RegisterMapper.toEntity(registerDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         MyUserRepository.save(user);
+    }
+
+    public Optional<MyUser> getUserById(Long id) {
+        return MyUserRepository.findById(id);
     }
 }
