@@ -6,12 +6,8 @@ import com.example.backend.user.repository.MyUserRepository;
 import com.example.backend.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -40,6 +36,40 @@ public class UserController {
         }
     }
 
+    @PutMapping("/me")
+    public ResponseEntity<?> updateMyProfile(@RequestBody UserProfileDTO userProfileDTO) {
+        Optional<MyUser> currentUser = userDataService.getLoggedInUser();
+
+        if (currentUser.isPresent()) {
+            MyUser user = currentUser.get();
+            if (userProfileDTO.getEmail() != null && !userProfileDTO.getEmail().equals(user.getEmail())) {
+                if (myUserRepository.findByEmail(userProfileDTO.getEmail()).isPresent()) {
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .body("Email already in use");
+                }
+                user.setEmail(userProfileDTO.getEmail());
+            }
+            if(userProfileDTO.getUsername() != null && !userProfileDTO.getUsername().equals(user.getNickname())) {
+                if (myUserRepository.findByNickname(userProfileDTO.getUsername()).isPresent()) {
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .body("Nickname already in use");
+                }
+                user.setNickname(userProfileDTO.getUsername());
+            }
+            if (userProfileDTO.getDescription() != null) {
+                user.setDescription(userProfileDTO.getDescription());
+            }
+            myUserRepository.save(user);
+            return ResponseEntity.ok(new UserProfileDTO(user));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("User not authenticated");
+        }
+    }
+
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId) {
         Optional<MyUser> userOptional = userDataService.getUserById(userId);
@@ -54,4 +84,6 @@ public class UserController {
                     .body("User not found");
         }
     }
+
+
 }
