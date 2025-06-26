@@ -101,6 +101,7 @@ public class StreamService {
 
 
     public Long getCreationTimeByIngress(String ingress) {
-        return repo.getCreationTimeByIngress(ingress);
+
+        return repo.getCreationTimeByIngress(ingress)/1000;
     }
 }

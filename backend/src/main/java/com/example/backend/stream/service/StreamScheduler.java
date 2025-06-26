@@ -26,22 +26,21 @@ public class StreamScheduler {
     public void cleanUpOldIngresses() throws IOException {
         IngressServiceClient client = clientService.getIngress();
         List<LivekitIngress.IngressInfo> ingresses = client.listIngress().execute().body();
-
         long nowEpochSeconds = System.currentTimeMillis() / 1000;
         long fiveMinutesInSeconds = 60;
-
         for (LivekitIngress.IngressInfo ingress : ingresses) {
             boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
-            Optional<String> data= Optional.of(ingress.getIngressId());
-            System.out.println(isInactive);
+            System.out.println("deleteing stream with room name:"+ingress.getRoomName());
+            long createdAt=0;
+            try{
+                createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());// Assuming it's in epoch seconds
+            }
+            catch (Exception e){
+                streamService.deleteIngress(ingress.getRoomName());
+            }
+            boolean isOlderThan1Min = nowEpochSeconds - createdAt> fiveMinutesInSeconds;
 
-            long createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());// Assuming it's in epoch seconds
-
-
-            boolean isOlderThan5Min = nowEpochSeconds - createdAt/1000 > fiveMinutesInSeconds;
-            System.out.println(nowEpochSeconds - createdAt/1000 > fiveMinutesInSeconds);
-            System.out.println(isOlderThan5Min);
-            if (isInactive && isOlderThan5Min) {
+            if (isInactive && isOlderThan1Min) {
                streamService.deleteStreamByRoomName(ingress.getRoomName());
             }
         }
