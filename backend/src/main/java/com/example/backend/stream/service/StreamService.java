@@ -5,6 +5,7 @@ import com.example.backend.stream.dto.RoomDto;
 import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.dto.StreamRequestDto;
 import com.example.backend.stream.mapper.StreamMapper;
+import com.example.backend.stream.message.UserAndStreamConnectorService;
 import com.example.backend.stream.model.Stream;
 import com.example.backend.stream.repo.StreamRepo;
 import io.livekit.server.IngressServiceClient;
@@ -31,8 +32,8 @@ public class StreamService {
         this.repo=repo;
     }
 
-
     public ObsDataDto createStreamAndReturnObsData(StreamRequestDto dto) throws IOException {
+        //UserAndStreamConnectorService.isUserInDatabase(dto.getUserId());
         RoomDto room=new RoomDto(dto.getRoomName(),50000,30);
         roomService.createRoom(room);
         IngressServiceClient ingressServiceClient=clientService.getIngress();
@@ -42,12 +43,13 @@ public class StreamService {
                 LivekitIngress.IngressInput.RTMP_INPUT,null,
                 null,null,true,null);
         Response<LivekitIngress.IngressInfo> response=ingressRequest.execute();
-        System.out.println(response.errorBody());
         StreamDto result=new StreamDto(dto.getTitle(),dto.getDescryption(),dto.getRoomName(),
                 dto.getCategory(),System.currentTimeMillis(),response.body().getIngressId(),dto.getUserId());
         saveMetaData(result);
         return new ObsDataDto(response.body().getUrl(),response.body().getStreamKey());
     }
+
+
 
     public void saveMetaData(StreamDto dto){
         repo.save(StreamMapper.toEntity(dto));
@@ -71,13 +73,6 @@ public class StreamService {
             IngressServiceClient ingressServiceClient = clientService.getIngress();
             Call<List<LivekitIngress.IngressInfo>> ingressCall = ingressServiceClient.listIngress();
             Response<List<LivekitIngress.IngressInfo>> response = ingressCall.execute();
-
-            if (!response.isSuccessful() || response.body() == null) {
-                System.err.println("Failed to fetch ingress list: " + response.errorBody().string());
-                return;
-            }
-
-            // Find ingress associated with the given room name
             for (LivekitIngress.IngressInfo info : response.body()) {
                 if (info.getRoomName().equals(roomName)) {
                     Call<LivekitIngress.IngressInfo> deleteCall = ingressServiceClient.deleteIngress(info.getIngressId());
@@ -91,7 +86,6 @@ public class StreamService {
                     return;
                 }
             }
-
             System.out.println("No ingress found for room: " + roomName);
         }
 
