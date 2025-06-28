@@ -35,4 +35,15 @@ public class ClientService {
 
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public String getApiSecret() {
+        return apiSecret;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }
