@@ -1,25 +1,34 @@
 package com.example.backend.chat.dto;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Locale;
+import com.example.backend.chat.model.ChatMessage;
 
-public class ChatMessageDTO {
+import java.time.LocalDateTime;
+
+public class ChatMessageResponseDTO {
     private Long streamId;
     private Long userId;
     private String senderNickname;
     private String content;
     private LocalDateTime timestamp;
 
-    public ChatMessageDTO() {}
+    public ChatMessageResponseDTO() {}
 
-    public ChatMessageDTO(Long streamId, Long userId, String senderNickname, String content, LocalDateTime timestamp) {
+    public ChatMessageResponseDTO(Long streamId, Long userId, String senderNickname, String content, LocalDateTime timestamp) {
         this.streamId = streamId;
         this.userId = userId;
         this.senderNickname = senderNickname;
         this.content = content;
         this.timestamp = timestamp;
     }
+
+    public ChatMessageResponseDTO(ChatMessage message) {
+        this.streamId = message.getStream().getId();
+        this.userId = message.getSender().getId();
+        this.senderNickname = message.getSender().getNickname();
+        this.content = message.getContent();
+        this.timestamp = message.getTimestamp();
+    }
+
 
     public Long getStreamId() {
         return streamId;
