@@ -33,5 +33,3 @@ build/
 .vscode/
 
 *.env
-*.properties
-development.env

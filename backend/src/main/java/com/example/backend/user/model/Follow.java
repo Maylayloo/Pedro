@@ -13,5 +13,29 @@ public class Follow {
 
     @ManyToOne
     private MyUser followed;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public MyUser getFollower() {
+        return follower;
+    }
+
+    public void setFollower(MyUser follower) {
+        this.follower = follower;
+    }
+
+    public MyUser getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(MyUser followed) {
+        this.followed = followed;
+    }
 }
 

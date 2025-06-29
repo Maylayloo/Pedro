@@ -2,6 +2,8 @@ package com.example.backend.user.controller;
 
 import com.example.backend.jwt.JwtUtil;
 import com.example.backend.user.dto.LoginRequestDTO;
+import com.example.backend.user.dto.RegisterDTO;
+import com.example.backend.user.model.MyUser;
 import com.example.backend.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -32,12 +35,29 @@ public class AuthController {
                             loginRequest.getPassword()
                     ));
 
-            String token = jwtUtil.generateToken(loginRequest.getUsername());
+            Optional<MyUser> userOpt = userDataService.loadUserByEmail(loginRequest.getUsername());
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Somehow cannot find user with this email, lol");
+            }
+            MyUser user = userOpt.get();
+            String token = jwtUtil.generateToken(user.getId());
             return ResponseEntity.ok(Map.of("token", token));
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid credentials");
+                    .body("Invalid username or password");
         }
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
+        try {
+            userDataService.registerUser(registerDTO);
+            return new ResponseEntity<>(Map.of("message", "User registered successfully"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

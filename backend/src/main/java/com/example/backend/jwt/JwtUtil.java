@@ -14,18 +14,19 @@ public class JwtUtil {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long expiration = 3600000; // 1h
 
-    public String generateToken(String email) {
+    public String generateToken(Long userId) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key)
                 .compact();
     }
 
-    public String extractEmail(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
+    public Long extractUserId(String token) {
+        String subject = Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().getSubject();
+        return Long.parseLong(subject);
     }
 
     public boolean validateToken(String token) {
