@@ -35,30 +35,29 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
 
         if (request instanceof ServletServerHttpRequest servletRequest) {
             HttpServletRequest httpRequest = servletRequest.getServletRequest();
-            String authHeader = httpRequest.getHeader("Authorization");
 
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = httpRequest.getParameter("token");
+            String token = httpRequest.getParameter("token");
 
-                if (token != null && jwtUtil.validateToken(token)) {
-                    Long userId = jwtUtil.extractUserId(token);
-                    UserDetails userDetails = userDetailsService.loadUserById(userId);
 
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities());
+            if (token != null && jwtUtil.validateToken(token)) {
+                Long userId = jwtUtil.extractUserId(token);
+                UserDetails userDetails = userDetailsService.loadUserById(userId);
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
 
-                    attributes.put("userId", userId);
-                    return true;
-                }
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                attributes.put("userId", userId);
+                return true;
             }
         }
 
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return false;
     }
+
 
     @Override
     public void afterHandshake(ServerHttpRequest request,
