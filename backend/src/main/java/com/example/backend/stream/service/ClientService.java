@@ -34,12 +34,15 @@ public class ClientService {
         return IngressServiceClient.createClient(url,apiKey,apiSecret);
 
     }
-    public String getApiSecret() {
-        return apiSecret;
-    }
+
     public String getApiKey() {
         return apiKey;
     }
+
+    public String getApiSecret() {
+        return apiSecret;
+    }
+
     public String getUrl() {
         return url;
     }

@@ -29,7 +29,7 @@ public class Stream {
         this.ingressId=ingressId;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 

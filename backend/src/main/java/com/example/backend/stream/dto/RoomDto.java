@@ -1,10 +1,5 @@
 package com.example.backend.stream.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class RoomDto {
     private String roomName;
     private int emptyTimeOut;

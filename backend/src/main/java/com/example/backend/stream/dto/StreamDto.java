@@ -1,11 +1,5 @@
 package com.example.backend.stream.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class StreamDto {
     String title;
     String descryption;

@@ -33,7 +33,7 @@ public class StreamScheduler {
             System.out.println("deleteing stream with room name:"+ingress.getRoomName());
             long createdAt=0;
             try{
-                createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());// Assuming it's in epoch seconds
+                createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());
             }
             catch (Exception e){
                 streamService.deleteIngress(ingress.getRoomName());
