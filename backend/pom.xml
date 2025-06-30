@@ -113,8 +113,14 @@
             <artifactId>dotenv-java</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.5</version>
+        </dependency>
 
-        
+
         <dependency>
             <groupId>io.livekit</groupId>
             <artifactId>livekit-server</artifactId>
