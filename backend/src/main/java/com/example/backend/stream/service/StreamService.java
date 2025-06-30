@@ -34,7 +34,7 @@ public class StreamService {
 
     public ObsDataDto createStreamAndReturnObsData(StreamRequestDto dto) throws IOException {
         //UserAndStreamConnectorService.isUserInDatabase(dto.getUserId());
-        RoomDto room=new RoomDto(dto.getRoomName(),50000,30);
+        RoomDto room=new RoomDto(dto.getRoomName(),60,30);
         roomService.createRoom(room);
         IngressServiceClient ingressServiceClient=clientService.getIngress();
         Call<LivekitIngress.IngressInfo> ingressRequest= ingressServiceClient.createIngress(
