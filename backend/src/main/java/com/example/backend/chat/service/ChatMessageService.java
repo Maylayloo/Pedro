@@ -30,12 +30,21 @@ public class ChatMessageService {
     private StreamRepo streamRepo;
 
     public void saveMessage(ChatMessageRequestDTO requestDTO, Long streamId) {
-        Optional<MyUser> user = myUserService.getLoggedInUser();
+        MyUser user = myUserService.getLoggedInUser()
+                .orElseThrow(() -> new RuntimeException("User not authenticated, sadge"));
+
+        List<Stream> streams = streamRepo.findAll();
+        System.out.println("Available streams: " + streams.size());
+
+        for (Stream stream : streams) {
+            System.out.println("Stream ID: " + stream.getId());
+        }
 
         Stream stream = streamRepo.findById(streamId)
                 .orElseThrow(() -> new RuntimeException("Stream not found"));
+
         ChatMessage message = new ChatMessage(
-                user.get(),
+                user,
                 requestDTO.getMessage(),
                 stream
         );
