@@ -2,6 +2,8 @@ package com.example.backend.chat;
 
 import com.example.backend.jwt.JwtChannelInterceptor;
 import com.example.backend.jwt.JwtHandshakeInterceptor;
+import com.example.backend.jwt.JwtUtil;
+import com.example.backend.user.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -11,7 +13,9 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -26,6 +30,13 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private JwtChannelInterceptor jwtChannelInterceptor;
 
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic");
@@ -37,10 +48,12 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/chat").addInterceptors(jwtHandshakeInterceptor).setAllowedOriginPatterns("*").withSockJS();
     }
 
-
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtChannelInterceptor);
     }
 
+
+
 }
+
