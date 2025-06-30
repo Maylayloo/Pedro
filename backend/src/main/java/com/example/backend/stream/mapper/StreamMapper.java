@@ -10,7 +10,7 @@ public class StreamMapper {
     public static Stream toEntity(StreamDto dto) {
         Stream stream = new Stream();
         stream.setTitle(dto.getTitle());
-        stream.setDescryption(dto.getDescryption());
+        stream.setDescription(dto.getDescription());
         stream.setUserId(dto.getUserId());
         stream.setRoomName(dto.getRoomName());
         stream.setCreationTime(dto.getCreationTime());
@@ -28,7 +28,7 @@ public class StreamMapper {
     public static StreamDto toDto(Stream stream){
         StreamDto dto = new StreamDto();
         dto.setTitle(stream.getTitle());
-        dto.setDescryption(stream.getDescryption());
+        dto.setDescription(stream.getDescription());
         dto.setRoomName(stream.getRoomName());
         dto.setCategory(stream.getCategory());
         dto.setUserId(stream.getUserId());

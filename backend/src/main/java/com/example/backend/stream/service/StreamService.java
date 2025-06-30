@@ -43,7 +43,7 @@ public class StreamService {
                 LivekitIngress.IngressInput.RTMP_INPUT,null,
                 null,null,true,null);
         Response<LivekitIngress.IngressInfo> response=ingressRequest.execute();
-        StreamDto result=new StreamDto(dto.getTitle(),dto.getDescryption(),dto.getRoomName(),
+        StreamDto result=new StreamDto(dto.getTitle(),dto.getDescription(),dto.getRoomName(),
                 dto.getCategory(),System.currentTimeMillis(),response.body().getIngressId(),dto.getUserId());
         saveMetaData(result);
         return new ObsDataDto(response.body().getUrl(),response.body().getStreamKey());

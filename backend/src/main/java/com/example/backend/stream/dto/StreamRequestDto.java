@@ -2,7 +2,7 @@ package com.example.backend.stream.dto;
 
 public class StreamRequestDto {
     String title;
-    String descryption;
+    String description;
     String roomName;
     String category;
     Long userId;
@@ -15,12 +15,12 @@ public class StreamRequestDto {
         this.title = title;
     }
 
-    public String getDescryption() {
-        return descryption;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescryption(String descryption) {
-        this.descryption = descryption;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getRoomName() {

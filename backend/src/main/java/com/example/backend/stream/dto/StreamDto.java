@@ -2,17 +2,17 @@ package com.example.backend.stream.dto;
 
 public class StreamDto {
     String title;
-    String descryption;
+    String description;
     String roomName;
     String category;
     Long creationTime;
     String ingressId;
     Long userId;
     public StreamDto(){}
-    public StreamDto(String title, String descryption,
+    public StreamDto(String title, String description,
                      String roomName, String category, Long creationTime, String ingressId, Long userId) {
         this.title = title;
-        this.descryption = descryption;
+        this.description = description;
         this.roomName = roomName;
         this.category = category;
         this.creationTime = creationTime;
@@ -28,12 +28,12 @@ public class StreamDto {
         this.title = title;
     }
 
-    public String getDescryption() {
-        return descryption;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescryption(String descryption) {
-        this.descryption = descryption;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getRoomName() {

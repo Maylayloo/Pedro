@@ -11,7 +11,7 @@ public class Stream {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String title;
-    String descryption;
+    String description;
     String roomName;
     String category;
     Long creationTime;
@@ -19,9 +19,9 @@ public class Stream {
     Long userId;
     public Stream(){}
 
-    public Stream(String title, String descryption, String roomName, Long userId,String category,String ingressId) {
+    public Stream(String title, String description, String roomName, Long userId,String category,String ingressId) {
         this.title = title;
-        this.descryption = descryption;
+        this.description = description;
         this.roomName = roomName;
         this.userId = userId;
         this.category=category;
@@ -45,12 +45,12 @@ public class Stream {
         this.title = title;
     }
 
-    public String getDescryption() {
-        return descryption;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescryption(String descryption) {
-        this.descryption = descryption;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getRoomName() {
