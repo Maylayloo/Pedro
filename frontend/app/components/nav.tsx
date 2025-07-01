@@ -5,6 +5,7 @@ import tokens from '@/public/tokens.png'
 import pfp from '@/public/profile.png'
 import SearchBar from "@/app/components/searchBar";
 import Link from "next/link";
+import Tmp_LiveButton from "@/app/components/tmp_LiveButton";
 
 const Nav = () => {
 
@@ -29,6 +30,9 @@ const Nav = () => {
                         <Image src={tokens} alt="pedroCoins icon" width={42} height={42}/>
                         <Image src={notifications} alt="notifications icon" width={24} height={24}/>
                         <Image src={pfp} alt="notifications icon" width={48} height={48}/>
+
+                        {/*    THIS IS TEMPORARY    */}
+                        <Tmp_LiveButton/>
                     </div>
                 ) : (
                     <div className='flex gap-4 items-center'>
