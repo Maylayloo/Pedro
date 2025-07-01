@@ -41,7 +41,8 @@ public class StreamService {
                 dto.getTitle(),dto.getRoomName(),"INGRESS",
                 "ingress"+dto.getUserId(),
                 LivekitIngress.IngressInput.RTMP_INPUT,null,
-                null,null,true,null);
+                LivekitIngress.IngressVideoOptions.newBuilder().getDefaultInstanceForType(),true,true,null);
+
         Response<LivekitIngress.IngressInfo> response=ingressRequest.execute();
         StreamDto result=new StreamDto(dto.getTitle(),dto.getDescription(),dto.getRoomName(),
                 dto.getCategory(),System.currentTimeMillis(),response.body().getIngressId(),dto.getUserId());
