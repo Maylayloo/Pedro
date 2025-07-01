@@ -13,7 +13,7 @@ export default function HomeLayout({
             <div className="flex">
                 <Sidebar/>
 
-                <section className='flex min-h-screen flex-1 flex-col pb-6 pt-18'>
+                <section className='flex min-h-screen flex-1 flex-col pt-18'>
                     <div className='w-full'>
                         {children}
                     </div>
