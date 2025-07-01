@@ -34,16 +34,17 @@ public class StreamService {
 
     public ObsDataDto createStreamAndReturnObsData(StreamRequestDto dto) throws IOException {
         //UserAndStreamConnectorService.isUserInDatabase(dto.getUserId());
-        RoomDto room=new RoomDto(dto.getRoomName(),50000,30);
+        RoomDto room=new RoomDto(dto.getRoomName(),60,30);
         roomService.createRoom(room);
         IngressServiceClient ingressServiceClient=clientService.getIngress();
         Call<LivekitIngress.IngressInfo> ingressRequest= ingressServiceClient.createIngress(
                 dto.getTitle(),dto.getRoomName(),"INGRESS",
                 "ingress"+dto.getUserId(),
                 LivekitIngress.IngressInput.RTMP_INPUT,null,
-                null,null,true,null);
+                LivekitIngress.IngressVideoOptions.newBuilder().getDefaultInstanceForType(),true,true,null);
+
         Response<LivekitIngress.IngressInfo> response=ingressRequest.execute();
-        StreamDto result=new StreamDto(dto.getTitle(),dto.getDescryption(),dto.getRoomName(),
+        StreamDto result=new StreamDto(dto.getTitle(),dto.getDescription(),dto.getRoomName(),
                 dto.getCategory(),System.currentTimeMillis(),response.body().getIngressId(),dto.getUserId());
         saveMetaData(result);
         return new ObsDataDto(response.body().getUrl(),response.body().getStreamKey());
