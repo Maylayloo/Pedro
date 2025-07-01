@@ -1,12 +1,7 @@
 import StreamRoom from "@/app/(root)/(profile)/components/streamRoom";
 import {notFound} from "next/navigation";
-import NotFound from "@/app/not-found";
 
-interface props {
-    username: string;
-}
-
-const OnlineProfile = async ({username, }: props) => {
+const OnlineProfile = async ({username,}: props) => {
 
     // Only guests for now
     const identity = `guest-${Date.now()}`;
@@ -28,10 +23,23 @@ const OnlineProfile = async ({username, }: props) => {
     if (!res.ok) return <NotFound/>;
 
     return (
-        <StreamRoom token={data}/>
+        <div className='flex flex-col lg:flex-row'>
+            <div className='w-full lg:w-[70%] xl:w-[80%]'>
+                <StreamRoom token={data}/>
+            </div>
+
+            <Chat/>
+        </div>
     );
 
 
 };
+
+import NotFound from "@/app/not-found";
+import Chat from "@/app/components/chat";
+
+interface props {
+    username: string;
+}
 
 export default OnlineProfile;

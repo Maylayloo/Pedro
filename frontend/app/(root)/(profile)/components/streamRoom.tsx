@@ -33,17 +33,16 @@ const VideoRenderer = ({ track }: { track: Track }) => {
             autoPlay
             playsInline
             muted
-            className="w-full h-full object-cover rounded-xl shadow-lg z-99 border p-1"
+            className="w-full h-full object-cover z-99"
         />
     );
 };
 
-// Viewer dla wszystkich subskrybowanych tracków video
 const StreamViewer = () => {
     const tracks = useTracks(undefined, { onlySubscribed: true });
 
     return (
-        <div className="flex flex-wrap justify-center items-center w-full h-full gap-4 p-4">
+        <div className="w-full h-full">
             {tracks.map(({ publication }, index) => {
                 const track = publication?.track;
                 if (!track || track.kind !== 'video') {
@@ -54,7 +53,7 @@ const StreamViewer = () => {
                 };
 
                 return (
-                    <div key={index} className="w-[300px] h-[200px] bg-black rounded-xl overflow-hidden">
+                    <div key={index} className="w-full overflow-hidden">
                         <VideoRenderer track={track} />
                     </div>
                 );
@@ -73,7 +72,7 @@ const StreamRoom = ({ token }: Props) => {
     };
 
     return (
-        <div className="w-full h-screen flex justify-center items-center bg-gray-900 text-white">
+        <div className="w-full">
             {!joined ? (
                 <button
                     onClick={handleJoin}
@@ -91,9 +90,7 @@ const StreamRoom = ({ token }: Props) => {
                     style={{ height: '100%', width: '100%' }}
                 >
                     <RoomAudioRenderer />
-                    siogma
                     <StreamViewer />
-                    om
                 </LiveKitRoom>
             )}
         </div>
