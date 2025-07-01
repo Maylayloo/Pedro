@@ -4,6 +4,7 @@ import com.example.backend.stream.dto.ObsDataDto;
 import com.example.backend.stream.dto.RoomDto;
 import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.dto.StreamRequestDto;
+import com.example.backend.stream.exception.RoomNameAlreadyExistsException;
 import com.example.backend.stream.mapper.StreamMapper;
 import com.example.backend.stream.message.UserAndStreamConnectorService;
 import com.example.backend.stream.model.Stream;
@@ -18,7 +19,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,14 +28,17 @@ public class StreamService {
     private final ClientService clientService;
     private final RoomService roomService;
     private final StreamRepo repo;
-    public StreamService(ClientService clientService, RoomService roomService, StreamRepo repo) {
+    private final ParticipantService participantService;
+    public StreamService(ClientService clientService, RoomService roomService, StreamRepo repo, ParticipantService participantService) {
         this.clientService = clientService;
         this.roomService = roomService;
         this.repo=repo;
+        this.participantService=participantService;
     }
 
     public ObsDataDto createStreamAndReturnObsData(StreamRequestDto dto) throws IOException {
         //UserAndStreamConnectorService.isUserInDatabase(dto.getUserId());
+        checkIfRoomNameIsNotRepeating(dto.getRoomName());
         RoomDto room=new RoomDto(dto.getRoomName(),60,30);
         roomService.createRoom(room);
         IngressServiceClient ingressServiceClient=clientService.getIngress();
@@ -60,6 +65,19 @@ public class StreamService {
     public List<StreamDto> getAllStreams() {
         List<Stream>streams=repo.findAll();
         return StreamMapper.toDtos(streams);
+
+    }
+
+    public void checkIfRoomNameIsNotRepeating(String roomName) {
+
+        List<StreamDto> streams = getAllStreams();
+        boolean flag= streams.stream()
+                .noneMatch(stream -> stream.getRoomName().equalsIgnoreCase(roomName));
+        if(!flag){
+            throw new RoomNameAlreadyExistsException("Room name already exists it the system , please provide different name");
+        }
+
+
 
     }
 
@@ -94,9 +112,24 @@ public class StreamService {
         return StreamMapper.toDto(repo.findByRoomName(roomName));
     }
 
-
     public Long getCreationTimeByIngress(String ingress) {
-
         return repo.getCreationTimeByIngress(ingress)/1000;
+    }
+
+    public List<StreamDto> getTopThreePopularStreams() throws IOException {
+        List<StreamDto> allStreams=StreamMapper.toDtos(repo.findAll());
+        Map<StreamDto,Long> streamwithviewers=new HashMap<>();
+        for(int i=0;i<allStreams.size();i++){
+           streamwithviewers.put(allStreams.get(i),participantService.
+                   getAllByRoomName(allStreams.get(i).getRoomName())
+                   .stream().count());
+
+        }
+        return streamwithviewers.entrySet()
+                .stream()
+                .sorted(Map.Entry.<StreamDto, Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 }
