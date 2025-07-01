@@ -1,5 +1,6 @@
 package com.example.backend.stream.service;
 
+import com.example.backend.stream.message.UserAndStreamConnectorService;
 import io.livekit.server.IngressServiceClient;
 import livekit.LivekitIngress;
 import org.hibernate.annotations.SecondaryRow;
@@ -15,14 +16,14 @@ import java.util.Optional;
 public class StreamScheduler {
     private final ClientService clientService;
     private final StreamService streamService;
-
+    private final int FIXED_DELAY=60*1000;
     public StreamScheduler(ClientService clientService, StreamService streamService) {
         this.clientService = clientService;
         this.streamService = streamService;
     }
 
 
-    @Scheduled(fixedDelay = 60 * 1000) // every 5 minutes
+    @Scheduled(fixedDelay = FIXED_DELAY)
     public void cleanUpOldIngresses() throws IOException {
         IngressServiceClient client = clientService.getIngress();
         List<LivekitIngress.IngressInfo> ingresses = client.listIngress().execute().body();
@@ -45,6 +46,18 @@ public class StreamScheduler {
             }
         }
         System.out.println("Ended cleaning inactive streams.");
+    }
+
+    @Scheduled(fixedDelay = FIXED_DELAY)
+    public void updateStreamerStatus() throws IOException {
+        IngressServiceClient client = clientService.getIngress();
+        List<LivekitIngress.IngressInfo> ingresses = client.listIngress().execute().body();
+        for (LivekitIngress.IngressInfo ingress : ingresses) {
+            String roomName = ingress.getRoomName();
+            Long userid=streamService.getUserIdByRoomName(roomName);
+            boolean Inactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_PUBLISHING;
+            UserAndStreamConnectorService.updateUserStatus(userid, Inactive);
+        }
     }
 
 }
