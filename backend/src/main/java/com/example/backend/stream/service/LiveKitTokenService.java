@@ -19,7 +19,7 @@ public class LiveKitTokenService {
     public String getToken(TokenDto dto){
         AccessToken token = new AccessToken(clientService.getApiKey(), clientService.getApiSecret());
 
-        token.addGrants(new RoomJoin(true),new RoomName(dto.getRoomName()),new CanPublish(true),new CanSubscribe(true));
+        token.addGrants(new RoomJoin(true),new RoomName(dto.getRoomName()),new CanSubscribe(true));
         token.setName(dto.getParticipantName());
         token.setIdentity(dto.getIdentity());
         token.setMetadata("metadata");
