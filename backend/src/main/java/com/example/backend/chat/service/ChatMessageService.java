@@ -39,7 +39,7 @@ public class ChatMessageService {
         for (Stream stream : streams) {
             System.out.println("Stream ID: " + stream.getId());
         }
-
+        System.out.println("Saving message for stream ID: " + streamId);
         Stream stream = streamRepo.findById(streamId)
                 .orElseThrow(() -> new RuntimeException("Stream not found"));
 
