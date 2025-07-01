@@ -42,6 +42,11 @@ public class StreamController {
     public ResponseEntity<StreamDto> getStreamByRoomName(@PathVariable String roomName){
         return new ResponseEntity<>(streamService.getStreamByRoomName(roomName),HttpStatus.OK);
     }
+
+    @GetMapping("/top3")
+    public ResponseEntity<List<StreamDto>> getTop3Streams() throws IOException {
+        return new ResponseEntity<>(streamService.getTopThreePopularStreams(),HttpStatus.OK);
+    }
     
 
 }

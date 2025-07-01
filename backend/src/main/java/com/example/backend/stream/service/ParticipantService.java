@@ -22,10 +22,10 @@ public class ParticipantService {
 
     }
 
-    public Call<List<LivekitModels.ParticipantInfo>> getAllByRoomName(String roomName) throws IOException {
+    public List<LivekitModels.ParticipantInfo> getAllByRoomName(String roomName) throws IOException {
         Call<List<LivekitModels.ParticipantInfo>> call = client.listParticipants(roomName);
         Response<List<LivekitModels.ParticipantInfo>> response = call.execute();
-        return call;
+        return response.body();
     }
 
     public Call<LivekitModels.ParticipantInfo> getDetails(String roomName, String identity) throws IOException {
