@@ -3,7 +3,7 @@ package com.example.backend.chat.dto;
 public class ChatMessageRequestDTO {
     private String message;
 
-    ChatMessageRequestDTO(String message) {
+    public ChatMessageRequestDTO(String message) {
         this.message = message;
     }
 
