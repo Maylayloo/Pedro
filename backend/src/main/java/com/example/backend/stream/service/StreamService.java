@@ -6,6 +6,7 @@ import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.dto.StreamRequestDto;
 import com.example.backend.stream.exception.RoomNameAlreadyExistsException;
 import com.example.backend.stream.mapper.StreamMapper;
+import com.example.backend.stream.message.ChatAndStreamConnector;
 import com.example.backend.stream.message.UserAndStreamConnectorService;
 import com.example.backend.stream.model.Stream;
 import com.example.backend.stream.repo.StreamRepo;
@@ -72,6 +73,9 @@ public class StreamService {
         List<Stream>streams=repo.findAll();
         return StreamMapper.toDtos(streams);
     }
+    public List<Stream> getAll(){
+        return repo.findAll();
+    }
 
     public void checkIfRoomNameIsNotRepeating(String roomName) {
         List<StreamDto> streams = getAllStreams();
@@ -83,6 +87,7 @@ public class StreamService {
     }
     @Transactional
     public void deleteStreamByRoomName(String roomName) throws IOException {
+        ChatAndStreamConnector.deleteAllChatsByStreamId(roomName);
         livePedroCoinService.removeByRoomName(roomName);
         deleteIngress(roomName);
         roomService.deleteRoomByRoomName(roomName);
@@ -109,8 +114,8 @@ public class StreamService {
             System.out.println("No ingress found for room: " + roomName);
         }
 
-    public StreamDto getStreamByRoomName(String roomName) {
-        return StreamMapper.toDto(repo.findByRoomName(roomName));
+    public Stream getStreamByRoomName(String roomName) {
+        return repo.findByRoomName(roomName));
     }
 
     public Long getCreationTimeByIngress(String ingress) {

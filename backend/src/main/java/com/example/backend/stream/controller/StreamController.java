@@ -3,6 +3,7 @@ package com.example.backend.stream.controller;
 import com.example.backend.stream.dto.ObsDataDto;
 import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.dto.StreamRequestDto;
+import com.example.backend.stream.model.Stream;
 import com.example.backend.stream.service.SSeEmiterService;
 import com.example.backend.stream.service.StreamService;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
@@ -43,7 +44,7 @@ public class StreamController {
     }
 
     @GetMapping("/{roomName}")
-    public ResponseEntity<StreamDto> getStreamByRoomName(@PathVariable String roomName){
+    public ResponseEntity<Stream> getStreamByRoomName(@PathVariable String roomName){
         return new ResponseEntity<>(streamService.getStreamByRoomName(roomName),HttpStatus.OK);
     }
 
