@@ -66,4 +66,8 @@ public class UserDataService {
     public Optional<MyUser> getUserById(Long id) {
         return MyUserRepository.findById(id);
     }
+
+    public Optional<MyUser> getUserByNickname(String nickname) {
+        return MyUserRepository.findByNickname(nickname);
+    }
 }
