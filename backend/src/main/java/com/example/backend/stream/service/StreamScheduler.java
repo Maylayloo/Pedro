@@ -30,6 +30,7 @@ public class StreamScheduler {
         long nowEpochSeconds = System.currentTimeMillis() / 1000;
         long fiveMinutesInSeconds = 60;
         for (LivekitIngress.IngressInfo ingress : ingresses) {
+
             boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
             System.out.println("deleteing stream with room name:"+ingress.getRoomName());
             long createdAt=0;
