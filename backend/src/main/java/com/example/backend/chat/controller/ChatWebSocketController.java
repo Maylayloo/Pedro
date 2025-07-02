@@ -2,7 +2,10 @@ package com.example.backend.chat.controller;
 
 import com.example.backend.chat.dto.ChatMessageRequestDTO;
 import com.example.backend.chat.dto.ChatMessageResponseDTO;
+import com.example.backend.chat.dto.ChatSocketRequestDTO;
+import com.example.backend.chat.dto.DonateMessageResponseDTO;
 import com.example.backend.chat.service.ChatMessageService;
+import com.example.backend.stream.service.LivePedroCoinService;
 import com.example.backend.user.model.MyUser;
 import com.example.backend.user.repository.MyUserRepository;
 import com.example.backend.user.service.UserDataService;
@@ -31,37 +34,66 @@ public class ChatWebSocketController {
     @Autowired
     private UserDataService userDataService;
 
-    @MessageMapping("/chat/{streamId}")
-    public void sendMessage(@DestinationVariable Long streamId,
-                            ChatMessageRequestDTO messageDTO,
-                            Principal principal) {
-        System.out.println("Received message for stream: " + streamId);
-        System.out.println("Principal: " + principal);
+    @Autowired
+    private LivePedroCoinService livePedroCoinService;
 
+    @MessageMapping("/chat/{streamId}")
+    public void handleSocketMessage(@DestinationVariable Long streamId,
+                                    ChatSocketRequestDTO requestDTO,
+                                    Principal principal) {
         if (principal instanceof Authentication auth) {
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
-        // Tutaj możesz użyć principal bez SecurityContextHolder:
-        String email = principal.getName(); // lub rzutuj na Authentication jeśli chcesz
-
+        String email = principal.getName();
         Optional<MyUser> userOpt = userDataService.loadUserByEmail(email);
 
         if (userOpt.isEmpty()) {
             throw new RuntimeException("User not authenticated, sadge");
         }
 
-        chatMessageService.saveMessage(messageDTO, streamId);
+        MyUser sender = userOpt.get();
 
-        ChatMessageResponseDTO responseDTO = new ChatMessageResponseDTO(
+        switch (requestDTO.getType()) {
+            case "chat" -> handleChatMessage(requestDTO, streamId, sender);
+            case "donate" -> handleDonateMessage(requestDTO, streamId, sender);
+            default -> throw new IllegalArgumentException("Unknown message type: " + requestDTO.getType());
+        }
+    }
+
+    private void handleChatMessage(ChatSocketRequestDTO dto, Long streamId, MyUser sender) {
+        chatMessageService.saveMessage(new ChatMessageRequestDTO(dto.getMessage()), streamId);
+
+        ChatMessageResponseDTO response = new ChatMessageResponseDTO(
                 streamId,
-                userOpt.get().getId(),
-                userOpt.get().getNickname(),
-                messageDTO.getMessage(),
+                sender.getId(),
+                sender.getNickname(),
+                dto.getMessage(),
                 LocalDateTime.now()
         );
-        messagingTemplate.convertAndSend("/topic/chat/" + streamId, responseDTO);
+        messagingTemplate.convertAndSend("/topic/chat/" + streamId, response);
     }
+
+    private void handleDonateMessage(ChatSocketRequestDTO dto, Long streamId, MyUser sender) {
+        int amount = dto.getAmount();
+
+        livePedroCoinService.donateStreamerWithcoinAmountByStreamId(streamId, amount);
+
+        int totalCoins = livePedroCoinService.getPedrocoinValueByStreamId(streamId);
+
+        DonateMessageResponseDTO donateResponse = new DonateMessageResponseDTO(
+                streamId,
+                sender.getId(),
+                sender.getNickname(),
+                dto.getMessage(),
+                amount,
+                totalCoins,
+                LocalDateTime.now()
+        );
+
+        messagingTemplate.convertAndSend("/topic/chat/" + streamId, donateResponse);
+    }
+
 
 
 }

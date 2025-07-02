@@ -1,35 +1,34 @@
 package com.example.backend.chat.dto;
 
-import com.example.backend.chat.model.ChatMessage;
-
 import java.time.LocalDateTime;
 
-public class ChatMessageResponseDTO {
-    private String type = "chat";
+public class DonateMessageResponseDTO {
+    private String type = "donate";
     private Long streamId;
     private Long userId;
     private String senderNickname;
-    private String content;
+    private String message;
+    private int amount;
+    private int totalAmount;
     private LocalDateTime timestamp;
 
-    public ChatMessageResponseDTO() {}
-
-    public ChatMessageResponseDTO(Long streamId, Long userId, String senderNickname, String content, LocalDateTime timestamp) {
+    public DonateMessageResponseDTO(Long streamId, Long userId, String senderNickname, String message, int amount, int totalAmount, LocalDateTime now) {
         this.streamId = streamId;
         this.userId = userId;
         this.senderNickname = senderNickname;
-        this.content = content;
-        this.timestamp = timestamp;
+        this.message = message;
+        this.amount = amount;
+        this.totalAmount = totalAmount;
+        this.timestamp = LocalDateTime.now();
     }
 
-    public ChatMessageResponseDTO(ChatMessage message) {
-        this.streamId = message.getStream().getId();
-        this.userId = message.getSender().getId();
-        this.senderNickname = message.getSender().getNickname();
-        this.content = message.getContent();
-        this.timestamp = message.getTimestamp();
+    public String getType() {
+        return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Long getStreamId() {
         return streamId;
@@ -55,12 +54,20 @@ public class ChatMessageResponseDTO {
         this.senderNickname = senderNickname;
     }
 
-    public String getContent() {
-        return content;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public int getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public LocalDateTime getTimestamp() {
@@ -71,11 +78,11 @@ public class ChatMessageResponseDTO {
         this.timestamp = timestamp;
     }
 
-    public String getType() {
-        return type;
+    public String getMessage() {
+        return message;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
