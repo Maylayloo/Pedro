@@ -70,4 +70,20 @@ public class UserDataService {
     public Optional<MyUser> getUserByNickname(String nickname) {
         return MyUserRepository.findByNickname(nickname);
     }
+
+    public void subtractPedroCoins(Long userId, int amount) {
+        MyUser user = MyUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.subtractCoins(amount);
+        MyUserRepository.save(user);
+    }
+
+    public void addPedroCoins(Long userId, int amount) {
+        MyUser user = MyUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPedroCoin(user.getPedroCoin() + amount);
+        MyUserRepository.save(user);
+    }
+
 }
