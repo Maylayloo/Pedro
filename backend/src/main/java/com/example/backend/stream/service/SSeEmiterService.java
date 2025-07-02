@@ -19,7 +19,7 @@ public class SSeEmiterService {
                 while (true) {
                     Long userCount = participantService.getAllByRoomName(roomName).stream().count() ;
                     emitter.send(SseEmitter.event()
-                            .name("user-count")
+                            .name("user_count")
                             .data(userCount));
                     Thread.sleep(2000); // odświeżanie co 2 sekundy
                 }
