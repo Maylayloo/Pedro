@@ -47,6 +47,11 @@ public class StreamController {
     public ResponseEntity<List<StreamDto>> getTop3Streams() throws IOException {
         return new ResponseEntity<>(streamService.getTopThreePopularStreams(),HttpStatus.OK);
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<StreamDto>> getSteamsByCategory(@PathVariable String category) throws IOException {
+        return new ResponseEntity<>(streamService.getStreamsByCategory(category),HttpStatus.OK);
+    }
     
 
 }

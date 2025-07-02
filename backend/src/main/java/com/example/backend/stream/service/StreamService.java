@@ -11,6 +11,7 @@ import com.example.backend.stream.model.Stream;
 import com.example.backend.stream.repo.StreamRepo;
 import io.livekit.server.IngressServiceClient;
 import io.livekit.server.RoomServiceClient;
+import jakarta.transaction.Transactional;
 import livekit.LivekitIngress;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
@@ -29,15 +30,21 @@ public class StreamService {
     private final RoomService roomService;
     private final StreamRepo repo;
     private final ParticipantService participantService;
-    public StreamService(ClientService clientService, RoomService roomService, StreamRepo repo, ParticipantService participantService) {
+    private final LivePedroCoinService livePedroCoinService;
+
+    public StreamService(ClientService clientService,
+                         RoomService roomService, StreamRepo repo, ParticipantService participantService,
+                         LivePedroCoinService PedroCoinService ) {
         this.clientService = clientService;
         this.roomService = roomService;
         this.repo=repo;
         this.participantService=participantService;
+        this.livePedroCoinService=PedroCoinService;
     }
 
     public ObsDataDto createStreamAndReturnObsData(StreamRequestDto dto) throws IOException {
         //UserAndStreamConnectorService.isUserInDatabase(dto.getUserId());
+
         checkIfRoomNameIsNotRepeating(dto.getRoomName());
         RoomDto room=new RoomDto(dto.getRoomName(),60,30);
         roomService.createRoom(room);
@@ -55,36 +62,30 @@ public class StreamService {
         return new ObsDataDto(response.body().getUrl(),response.body().getStreamKey());
     }
 
-
-
     public void saveMetaData(StreamDto dto){
-        repo.save(StreamMapper.toEntity(dto));
+        Stream stream=StreamMapper.toEntity(dto);
+        repo.save(stream);
+        livePedroCoinService.createLivePedroCoin(stream);
     }
-
 
     public List<StreamDto> getAllStreams() {
         List<Stream>streams=repo.findAll();
         return StreamMapper.toDtos(streams);
-
     }
 
     public void checkIfRoomNameIsNotRepeating(String roomName) {
-
         List<StreamDto> streams = getAllStreams();
         boolean flag= streams.stream()
                 .noneMatch(stream -> stream.getRoomName().equalsIgnoreCase(roomName));
         if(!flag){
             throw new RoomNameAlreadyExistsException("Room name already exists it the system , please provide different name");
         }
-
-
-
     }
-
+    @Transactional
     public void deleteStreamByRoomName(String roomName) throws IOException {
+        livePedroCoinService.removeByRoomName(roomName);
         deleteIngress(roomName);
         roomService.deleteRoomByRoomName(roomName);
-
         repo.deleteByRoomName(roomName);
     }
 
@@ -123,7 +124,6 @@ public class StreamService {
            streamwithviewers.put(allStreams.get(i),participantService.
                    getAllByRoomName(allStreams.get(i).getRoomName())
                    .stream().count());
-
         }
         return streamwithviewers.entrySet()
                 .stream()
@@ -131,5 +131,17 @@ public class StreamService {
                 .limit(3)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+    }
+
+    public Long getUserIdByRoomName(String roomName) {
+        return repo.findByRoomName(roomName).getUserId();
+    }
+
+    public List<StreamDto> getStreamsByCategory(String category) {
+        return StreamMapper.toDtos(
+                repo.findAll().stream()
+                        .filter(stream -> stream.getCategory().equalsIgnoreCase(category))
+                        .collect(Collectors.toList())
+        );
     }
 }
