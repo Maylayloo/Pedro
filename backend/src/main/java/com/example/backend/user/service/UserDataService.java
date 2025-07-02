@@ -29,6 +29,20 @@ public class UserDataService {
 
     public Optional<MyUser> getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null) {
+            System.out.println("No authentication found in SecurityContextHolder");
+            return Optional.empty();
+        }
+        if(!auth.isAuthenticated()){
+            System.out.println("User is not authenticated");
+            return Optional.empty();
+        }
+        if(auth.getPrincipal().equals("anonymousUser")){
+            System.out.println("User is anonymous");
+            return Optional.empty();
+        }
+
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
         String email = userDetails.getUsername();
 

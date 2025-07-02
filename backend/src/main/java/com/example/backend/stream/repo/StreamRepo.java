@@ -10,9 +10,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.beans.Transient;
+import java.util.List;
 
 @Repository
 public interface StreamRepo extends JpaRepository<Stream,Long> {
+    List<Stream> findAll();
+
     @Transactional
     void deleteByRoomName(String roomName);
 

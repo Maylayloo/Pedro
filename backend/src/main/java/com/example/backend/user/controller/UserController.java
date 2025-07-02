@@ -1,14 +1,18 @@
 package com.example.backend.user.controller;
 
+import com.example.backend.user.dto.SearchRequestDTO;
+import com.example.backend.user.dto.SearchResponseDTO;
 import com.example.backend.user.dto.UserProfileDTO;
 import com.example.backend.user.model.MyUser;
 import com.example.backend.user.repository.MyUserRepository;
 import com.example.backend.user.service.UserDataService;
+import com.example.backend.user.service.UserSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +24,8 @@ public class UserController {
     private UserDataService userDataService;
     @Autowired
     private MyUserRepository myUserRepository;
+    @Autowired
+    private UserSearchService userSearchService;
 
     @GetMapping("/me")
     public ResponseEntity<?> getMyProfile() {
@@ -83,6 +89,13 @@ public class UserController {
                     .status(HttpStatus.NOT_FOUND)
                     .body("User not found");
         }
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<SearchResponseDTO>> searchUsers(@RequestBody SearchRequestDTO request) {
+        List<SearchResponseDTO> users = userSearchService.searchUsers(request.getQuery());
+        //System.out.println("users:" + users);
+        return ResponseEntity.ok(users);
     }
 
 
