@@ -3,23 +3,27 @@ package com.example.backend.stream.controller;
 import com.example.backend.stream.dto.ObsDataDto;
 import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.dto.StreamRequestDto;
+import com.example.backend.stream.service.SSeEmiterService;
 import com.example.backend.stream.service.StreamService;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("/stream")
 public class StreamController {
     private final StreamService streamService;
-
-    StreamController(StreamService streamService){
+    private final SSeEmiterService sse;
+    StreamController(StreamService streamService, SSeEmiterService sse) {
         this.streamService=streamService;
+        this.sse=sse;
     }
 
     @PostMapping
@@ -52,7 +56,11 @@ public class StreamController {
     public ResponseEntity<List<StreamDto>> getSteamsByCategory(@PathVariable String category) throws IOException {
         return new ResponseEntity<>(streamService.getStreamsByCategory(category),HttpStatus.OK);
     }
-    
+
+    @GetMapping("/sse/{roomName}")
+    public SseEmitter streamUserCount(@PathVariable String roomName) throws IOException {
+        return sse.countParticipantsByRoomName(roomName);
+    }
 
 }
 
