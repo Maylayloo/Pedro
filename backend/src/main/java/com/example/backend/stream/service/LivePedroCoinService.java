@@ -39,4 +39,13 @@ public class LivePedroCoinService {
         LivePedroCoin coin=livePedrocoinRepo.findByStreamId(streamid);
         return coin.getCoinsValue();
     }
+
+    public void removeByStreamId(Long streamid){
+        livePedrocoinRepo.removeByStream_Id(streamid);
+    }
+
+    public void removeByRoomName(String roomName) {
+        Stream s=streamrepo.findByRoomName(roomName);
+        removeByStreamId(s.getId());
+    }
 }

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LivePedrocoinRepo extends JpaRepository<LivePedroCoin,Long> {
     LivePedroCoin findByStreamId(Long streamid);
+
+    void removeByStream_Id(Long streamId);
 }
