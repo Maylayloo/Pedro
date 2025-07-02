@@ -76,7 +76,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/id/{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId) {
         Optional<MyUser> userOptional = userDataService.getUserById(userId);
 
@@ -98,5 +98,19 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/nick/{nickname}")
+    public ResponseEntity<?> getUserByNickname(@PathVariable String nickname) {
+        Optional<MyUser> userOptional = userDataService.getUserByNickname(nickname);
+
+        if (userOptional.isPresent()) {
+            MyUser user = userOptional.get();
+            UserProfileDTO dto = new UserProfileDTO(user);
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("User not found");
+        }
+    }
 
 }
