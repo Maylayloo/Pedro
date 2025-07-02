@@ -26,6 +26,9 @@ public class UserAndStreamConnectorService {
 
     public static void updateUserStatus(Long userid,boolean status){
         MyUser myUser = myUserRepository.findById(userid).orElse(null);
+        if(myUser==null){
+            throw  new NoUserFound(userid);
+        }
         myUser.setStatus(status);
         myUserRepository.save(myUser);
     }

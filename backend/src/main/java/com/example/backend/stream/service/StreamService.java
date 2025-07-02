@@ -11,6 +11,7 @@ import com.example.backend.stream.model.Stream;
 import com.example.backend.stream.repo.StreamRepo;
 import io.livekit.server.IngressServiceClient;
 import io.livekit.server.RoomServiceClient;
+import jakarta.transaction.Transactional;
 import livekit.LivekitIngress;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
@@ -43,6 +44,7 @@ public class StreamService {
 
     public ObsDataDto createStreamAndReturnObsData(StreamRequestDto dto) throws IOException {
         //UserAndStreamConnectorService.isUserInDatabase(dto.getUserId());
+
         checkIfRoomNameIsNotRepeating(dto.getRoomName());
         RoomDto room=new RoomDto(dto.getRoomName(),60,30);
         roomService.createRoom(room);
@@ -79,11 +81,11 @@ public class StreamService {
             throw new RoomNameAlreadyExistsException("Room name already exists it the system , please provide different name");
         }
     }
-
+    @Transactional
     public void deleteStreamByRoomName(String roomName) throws IOException {
+        livePedroCoinService.removeByRoomName(roomName);
         deleteIngress(roomName);
         roomService.deleteRoomByRoomName(roomName);
-
         repo.deleteByRoomName(roomName);
     }
 
@@ -133,5 +135,13 @@ public class StreamService {
 
     public Long getUserIdByRoomName(String roomName) {
         return repo.findByRoomName(roomName).getUserId();
+    }
+
+    public List<StreamDto> getStreamsByCategory(String category) {
+        return StreamMapper.toDtos(
+                repo.findAll().stream()
+                        .filter(stream -> stream.getCategory().equalsIgnoreCase(category))
+                        .collect(Collectors.toList())
+        );
     }
 }
