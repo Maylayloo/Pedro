@@ -17,10 +17,20 @@
     @apply flex justify-between items-center;
 }
 
+.auth-btn {
+    @apply px-3 py-2 rounded-xl shadow-xl/20;
+}
+
 @theme {
     --color-main-bg: #171B22;
     --color-secondary-bg: #1C212A;
     --color-main-purple: #C538A7;
-    --color-main-green: #00A23E
+    --color-hover-purple: #961d7d;
+    --color-main-green: #00A23E;
+    --color-hover-green: #018233;
+    --color-main-gray: #626162;
+    --color-main-footer: rgba(0, 0, 0, 0.4);
+
+    --breakpoint-4xl: 108rem;
 
 }
