@@ -115,7 +115,7 @@ public class StreamService {
         }
 
     public Stream getStreamByRoomName(String roomName) {
-        return repo.findByRoomName(roomName));
+        return repo.findByRoomName(roomName);
     }
 
     public Long getCreationTimeByIngress(String ingress) {

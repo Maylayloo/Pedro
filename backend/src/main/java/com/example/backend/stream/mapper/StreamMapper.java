@@ -16,7 +16,6 @@ public class StreamMapper {
         stream.setCreationTime(dto.getCreationTime());
         stream.setCategory(dto.getCategory());
         stream.setIngressId(dto.getIngressId());
-        stream.setId(dto.getId());
         return stream;
     }
 
@@ -35,7 +34,6 @@ public class StreamMapper {
         dto.setUserId(stream.getUserId());
         dto.setCreationTime(stream.getCreationTime());
         dto.setIngressId(stream.getIngressId());
-        dto.setId(stream.getId());
         return dto;
     }
 }
