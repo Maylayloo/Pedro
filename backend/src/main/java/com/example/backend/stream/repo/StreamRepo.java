@@ -25,4 +25,6 @@ public interface StreamRepo extends JpaRepository<Stream,Long> {
     Long getCreationTimeByIngress(@Param("ingressId") String ingressId);
     @Query("SELECT s.userId FROM Stream s WHERE s.id = :streamid")
     Long findUserIdByStreamId(@Param("streamid") Long streamid);
+
+    Long findStreamIdByRoomName(String roomName);
 }
