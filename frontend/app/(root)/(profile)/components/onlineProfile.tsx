@@ -1,5 +1,4 @@
 import StreamRoom from "@/app/(root)/(profile)/components/streamRoom";
-import {notFound} from "next/navigation";
 
 const OnlineProfile = async ({username,}: props) => {
 
@@ -18,17 +17,38 @@ const OnlineProfile = async ({username,}: props) => {
             roomName: username
         })
     })
-    const data = await res.text()
+    const token = await res.text()
 
-    if (!res.ok) return <NotFound/>;
+    const res2 = await fetch(`http://localhost:8080/stream/${username}`, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-cache",
+        headers: {
+            "content-type": "application/json",
+        }
+    })
+
+    const streamData = await res2.json()
+
+    console.log(streamData)
+
+    if (!res.ok || !res2.ok) return <NotFound/>;
+
 
     return (
-        <div className='flex flex-col lg:flex-row'>
-            <div className='w-full lg:w-[70%] xl:w-[80%]'>
-                <StreamRoom token={data}/>
+        <div className='flex flex-col lg:flex-row '>
+            <div className='w-full lg:w-[70%] xl:w-[75%] 4xl:w-[80%]'>
+                <StreamRoom token={token}/>
+                <StreamInfo
+                    username={streamData.roomName}
+                    title={streamData.title}
+                    category={streamData.category}
+                />
             </div>
 
-            <Chat/>
+            <Chat
+                streamId={streamData.id}
+            />
         </div>
     );
 
@@ -37,6 +57,7 @@ const OnlineProfile = async ({username,}: props) => {
 
 import NotFound from "@/app/not-found";
 import Chat from "@/app/components/chat";
+import StreamInfo from "@/app/(root)/(profile)/components/streamInfo";
 
 interface props {
     username: string;
