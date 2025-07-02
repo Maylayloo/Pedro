@@ -16,6 +16,7 @@ public class DonateMessageResponseDTO {
         this.streamId = streamId;
         this.userId = userId;
         this.senderNickname = senderNickname;
+        this.message = message;
         this.amount = amount;
         this.totalAmount = totalAmount;
         this.timestamp = LocalDateTime.now();
