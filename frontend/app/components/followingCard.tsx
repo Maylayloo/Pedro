@@ -5,7 +5,7 @@ import Link from "next/link";
 interface props {
     name: string,
     pfp?: string,
-    status: "Online" | "Offline",
+    status: boolean,
     category?: string,
     viewers?: number;
 }
@@ -20,7 +20,7 @@ const FollowingCard = ({name, pfp, status, category, viewers}: props) => {
             <div>
                 <Link href={`/${name}`}>
                     <Image src={pfp || default_pfp} alt={`${name}\`s profile picture`} width={32} height={32}
-                           className={`${status === "Offline" && 'grayscale'}`}/>
+                           className={`${!status && 'grayscale'}`}/>
                 </Link>
 
             </div>
@@ -33,12 +33,12 @@ const FollowingCard = ({name, pfp, status, category, viewers}: props) => {
             <div className="flex flex-col border-l-2 border-l-white pl-2">
 
                 <div className='flex items-center gap-1'>
-                    <div className={`w-2 h-2 rounded-full ${status === "Online" ? 'bg-main-green' : 'bg-main-gray'}`}/>
-                    <span>{status}</span>
+                    <div className={`w-2 h-2 rounded-full ${status ? 'bg-main-green' : 'bg-main-gray'}`}/>
+                    <span>{status ? "Online" : "Offline"}</span>
                 </div>
 
                 {
-                    status === "Online" && (
+                    status && (
                         <div className='flex items-center gap-1'>
                             <div className='w-2 h-2 bg-main-purple rounded-full'/>
                             <span>{viewers}</span>

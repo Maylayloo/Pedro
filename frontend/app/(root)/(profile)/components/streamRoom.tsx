@@ -62,7 +62,6 @@ const StreamViewer = () => {
     );
 };
 
-// Główny komponent pokoju
 const StreamRoom = ({ token }: Props) => {
     const [joined, setJoined] = useState(false);
     const serverURL = 'wss://livekit.pedro.com.pl';
@@ -74,12 +73,15 @@ const StreamRoom = ({ token }: Props) => {
     return (
         <div className="w-full">
             {!joined ? (
-                <button
-                    onClick={handleJoin}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition rounded-lg text-lg font-medium"
-                >
-                    Start stream
-                </button>
+                <div className='flex justify-center p-12'>
+                    <button
+                        onClick={handleJoin}
+                        className="px-6 py-3 bg-main-green hover:bg-hover-green transition rounded-lg text-lg font-medium cursor-pointer"
+                    >
+                        Zacznij oglądać
+                    </button>
+                </div>
+
             ) : (
                 <LiveKitRoom
                     token={token}
