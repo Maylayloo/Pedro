@@ -9,7 +9,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -71,10 +73,14 @@ public class FollowService {
         return followRepository.countByFollower(user);
     }
 
-    public Boolean checkIfStreamerIsFollowedByMeByStreamerNickName(String nickName) {
+    public Map<String,Boolean> checkIfStreamerIsFollowedByMeByStreamerNickName(String nickName) {
         Optional<MyUser> currentUser = userDataService.getLoggedInUser();
         List<FollowedUserDTO> followed=followRepository.findFollowedUsersWithStatus(currentUser.get().getId());
-        return followed.stream()
+        boolean flag=followed.stream()
                 .anyMatch(f -> f.nickname().equalsIgnoreCase(nickName));
+        Map<String,Boolean> map=new HashMap<>();
+        map.put("followed",flag);
+        return map;
+
     }
 }

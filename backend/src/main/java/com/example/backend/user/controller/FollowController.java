@@ -77,9 +77,10 @@ public class FollowController {
     }
 
     @GetMapping("/myFollow/{nickName}")
-    public ResponseEntity<Boolean> checkIfIFollowThisStreamer(@PathVariable String nickName){
+    public ResponseEntity<Map<String,Boolean>> checkIfIFollowThisStreamer(@PathVariable String nickName){
         return new ResponseEntity<>(followService.checkIfStreamerIsFollowedByMeByStreamerNickName(nickName)
                 , HttpStatus.OK);
+
 
     }
 }
