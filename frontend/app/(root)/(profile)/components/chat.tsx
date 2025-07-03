@@ -5,8 +5,9 @@ import SockJS from "sockjs-client";
 import {IFrame, Stomp} from "@stomp/stompjs";
 import React, {useEffect, useRef, useState} from "react";
 
-interface Props {
-    streamId: number;
+
+interface props {
+    streamId: number,
 }
 
 interface ChatMessage {
@@ -18,7 +19,7 @@ interface ChatMessage {
     // timestamp: string;
 }
 
-const Chat = ({streamId}: Props) => {
+const Chat = ({streamId}: props) => {
     const [token, setToken] = useState<string | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageType, setMessageType] = useState<string>("chat")
@@ -28,6 +29,7 @@ const Chat = ({streamId}: Props) => {
 
     const [isDonate, setIsDonate] = useState(false)
     const [amount, setAmount] = useState<number>(0);
+    const [gatheredAmount, setGatheredAmount] = useState<number>(0);
 
     const colors: string[] = [
         "#FF9808", "#14FF82", "#ED5AD9", "#1AEAD8", "#FA2A2A", "#2B95FF", "#F2FF3A", "#fa7dd6", "#5d30f0", "#b0eb28"
@@ -53,6 +55,38 @@ const Chat = ({streamId}: Props) => {
     useEffect(() => {
         if (!token) return;
 
+        const fetchData = async () => {
+            const res = await fetch(`http://localhost:8080/stream/totalAmount/${streamId}`, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
+
+            })
+
+            if (!res.ok) {
+                return
+            }
+
+            const data = await res.text();
+
+            if (data) {
+                console.log("DFAATATATAATATATA")
+                console.log(data)
+                setGatheredAmount(JSON.parse(data))
+            }
+
+        }
+
+        fetchData()
+    }, [token])
+
+
+    useEffect(() => {
+        if (!token) return;
+
         const socket = new SockJS(`http://localhost:8080/chat?token=${token}`);
         const stompClient = Stomp.over(socket);
         stompClientRef.current = stompClient;
@@ -62,6 +96,15 @@ const Chat = ({streamId}: Props) => {
 
             stompClient.subscribe(`/topic/chat/${streamId}`, function (message) {
                 const response = JSON.parse(message.body);
+
+                if (response.type === "donate" && typeof response.totalAmount === "number") {
+                    console.log("audio")
+                    const audio = new Audio("/donate.mp3")
+                    audio.play().catch(err => console.warn("Nie można odtworzyć dźwięku:", err));
+
+                    setGatheredAmount(response.totalAmount);
+                }
+
                 setMessages((prev) => [...prev, response]);
             });
         });
@@ -94,6 +137,7 @@ const Chat = ({streamId}: Props) => {
 
 
         if (input.trim() && stompClientRef.current && isDonate && amount !== 0) {
+            console.log("POSZEDŁ DONATE")
             stompClientRef.current.send(
                 `/app/chat/${streamId}`,
                 {},
@@ -108,6 +152,12 @@ const Chat = ({streamId}: Props) => {
             className="flex flex-col lg:border-l-black lg:border-l-2 bg-secondary-bg flex-1 h-[calc(100vh-4.5rem)]">
             <ChatLogo/>
 
+            <div className="flex-center p-1 border-b-2 border-b-black">
+                <span className='text-lg'>
+                    Zebrano już <span className='text-main-green font-bold'>{gatheredAmount}</span> Pedro Coinów!
+                </span>
+            </div>
+
             <div className="flex-4 overflow-y-auto p-4 space-y-1">
                 {messages.map((msg: ChatMessage, index: number) => (
                     <div key={index}>
@@ -120,13 +170,13 @@ const Chat = ({streamId}: Props) => {
                                 </span>
 
                             ) : (
-                                    <div className='py-4 px-2 flex flex-col items-center bg-main-purple gap-1'>
-                                        <span className='text-xl'>{msg.senderNickname}</span>
-                                        <div className='w-[60%] h-[1px] bg-white'/>
-                                        <span>{msg.message}</span>
-                                        <div className='w-[60%] h-[1px] bg-white'/>
-                                        <span className='text-lg'>{msg.amount} PedroCoin</span>
-                                    </div>
+                                <div className='py-3 px-2 flex flex-col items-center bg-main-purple gap-1 rounded-lg'>
+                                    <span className='text-xl'>{msg.senderNickname}</span>
+                                    <div className='w-[60%] h-[1px] bg-white'/>
+                                    <span>{msg.message}</span>
+                                    <div className='w-[60%] h-[1px] bg-white'/>
+                                    <span className='text-lg'>{msg.amount} PedroCoin</span>
+                                </div>
                             )
                         }
 
