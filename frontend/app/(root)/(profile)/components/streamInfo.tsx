@@ -4,14 +4,16 @@ import Image from 'next/image'
 import default_pfp from '@/public/profile.png'
 import { useEffect, useState } from "react";
 import viewers_icon from '@/public/group.png'
+import FollowButton from "@/app/(root)/(profile)/components/followButton";
 
 interface props {
     username: string,
     title: string,
     category: string,
+    userId: number,
 }
 
-const StreamInfo = ({ title, category, username }: props) => {
+const StreamInfo = ({ title, category, username, userId}: props) => {
     const [viewerCount, setViewerCount] = useState<number>(0);
 
     useEffect(() => {
@@ -63,9 +65,10 @@ const StreamInfo = ({ title, category, username }: props) => {
                 <span className="opacity-50">{category}</span>
             </div>
             <div className='flex-1 flex flex-col items-end text-white font-semibold justify-end px-4'>
-                <button className='px-4 py-1 bg-main-purple hover:bg-hover-purple mb-2 rounded cursor-pointer'>
-                    Zaobserwuj
-                </button>
+                <FollowButton
+                    userId={userId}
+                    username={username}
+                />
                 <div className='flex-center gap-1'>
                     <Image src={viewers_icon} alt="Liczba widzów:" width={20}></Image>
                     <span className='text-xl text-main-green'>{viewerCount}</span> <span>oglądających</span>

@@ -1,35 +1,50 @@
-'use client'
-// EVERYTHING HERE IS TEMPORARY
+'use client';
 
-const Tmp_LiveButton = () => {
+interface Props {
+    title: string;
+    category: string;
+    userId: number,
+    username: string,
+    onSuccess: (data: { url: string; streamKey: string }) => void;
+}
 
+const Tmp_LiveButton = ({ title, category, onSuccess, userId, username}: Props) => {
     const tmp_showKey = async () => {
-        const key_data = await fetch("http://localhost:8080/stream", {
+        try {
+            const res = await fetch("http://localhost:8080/stream", {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    title: "Stream testowy",
-                    description: "Testowy opis testowego streama",
-                    roomName: "Knight34",
-                    category: "Testowa kategoria testowego Streama",
-                    userId: 777
+                    title,
+                    description: "tak",
+                    roomName: username,
+                    category,
+                    userId,
                 })
+            });
+
+            if (!res.ok) {
+                console.warn("Błąd przy tworzeniu streama");
+                return;
             }
-        )
 
-        const fetched_key_data = await key_data.json()
+            const data = await res.json();
 
-        if (fetched_key_data) {
-            console.log(fetched_key_data)
+            if (data?.url && data?.streamKey) {
+                onSuccess({ url: data.url, streamKey: data.streamKey });
+            } else {
+                console.warn("Brakuje klucza lub URL-a w odpowiedzi");
+            }
+        } catch (err) {
+            console.error("Błąd połączenia:", err);
         }
-
-    }
+    };
 
     return (
-        <button className='border px-2 py-1 rounded-xl cursor-pointer' onClick={tmp_showKey}>
+        <button className="border px-2 py-1 rounded-xl cursor-pointer" onClick={tmp_showKey}>
             GO LIVE
         </button>
     );
