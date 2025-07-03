@@ -113,4 +113,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/me/coins")
+    public ResponseEntity<?> getMyCoins() {
+        Optional<MyUser> currentUser = userDataService.getLoggedInUser();
+
+        if (currentUser.isPresent()) {
+            MyUser user = currentUser.get();
+            return ResponseEntity.ok(user.getPedroCoin());
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("User not authenticated");
+        }
+    }
 }
