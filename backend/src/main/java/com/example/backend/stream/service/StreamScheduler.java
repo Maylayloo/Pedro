@@ -32,12 +32,20 @@ public class StreamScheduler {
         long nowEpochSeconds = System.currentTimeMillis() / 1000;
         long OneMinutesInSeconds = 60;
         List<StreamDto> streams = streamService.getAllStreams();
+
         for(StreamDto stream:streams){
             if(ingresses!=null){
                 for (LivekitIngress.IngressInfo ingress : ingresses) {
-                    if(ingress.getRoomName().equals(stream.getRoomName())){
+                    ingress:if(ingress.getRoomName().equals(stream.getRoomName())){
                         boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
-                        Long createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());
+                        long createdAt=0;
+                        try{
+                            createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());
+                        }
+                        catch (Exception e){
+                            break ingress;
+                        }
+
                         boolean isOlderThan1Min = nowEpochSeconds - createdAt> OneMinutesInSeconds;
                         if (isInactive && isOlderThan1Min) {
                             System.out.println("deleteing stream with room name:"+ingress.getRoomName());
