@@ -4,8 +4,10 @@ import com.example.backend.stream.dto.ObsDataDto;
 import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.dto.StreamRequestDto;
 import com.example.backend.stream.model.Stream;
+import com.example.backend.stream.service.LivePedroCoinService;
 import com.example.backend.stream.service.SSeEmiterService;
 import com.example.backend.stream.service.StreamService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,10 @@ import java.util.concurrent.Executors;
 public class StreamController {
     private final StreamService streamService;
     private final SSeEmiterService sse;
+
+    @Autowired
+    private LivePedroCoinService livePedroCoinService;
+
     StreamController(StreamService streamService, SSeEmiterService sse) {
         this.streamService=streamService;
         this.sse=sse;
@@ -63,5 +69,10 @@ public class StreamController {
         return sse.countParticipantsByRoomName(roomName);
     }
 
+    @GetMapping("/totalAmount/{streamId}")
+    public ResponseEntity<Integer> getTotalAmountByRoomName(@PathVariable Long streamId) {
+        int totalCoins = livePedroCoinService.getPedrocoinValueByStreamId(streamId);
+        return new ResponseEntity<>(totalCoins, HttpStatus.OK);
+    }
 }
 
