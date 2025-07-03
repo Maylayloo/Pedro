@@ -81,6 +81,5 @@ public class FollowService {
         Map<String,Boolean> map=new HashMap<>();
         map.put("followed",flag);
         return map;
-
     }
 }

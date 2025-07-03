@@ -80,5 +80,6 @@ public class FollowController {
     public ResponseEntity<Map<String,Boolean>> checkIfIFollowThisStreamer(@PathVariable String nickName){
         return new ResponseEntity<>(followService.checkIfStreamerIsFollowedByMeByStreamerNickName(nickName)
                 , HttpStatus.OK);
+
     }
 }
