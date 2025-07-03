@@ -81,5 +81,6 @@ public class FollowController {
         return new ResponseEntity<>(followService.checkIfStreamerIsFollowedByMeByStreamerNickName(nickName)
                 , HttpStatus.OK);
 
+
     }
 }
