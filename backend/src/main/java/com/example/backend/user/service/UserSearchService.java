@@ -21,4 +21,6 @@ public class UserSearchService {
                 .map(user -> new SearchResponseDTO(user.getId(), user.getNickname()))
                 .toList();
     }
+
+
 }

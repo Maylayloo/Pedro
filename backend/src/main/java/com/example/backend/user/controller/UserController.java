@@ -113,4 +113,17 @@ public class UserController {
         }
     }
 
+    @PostMapping("/refill")
+    public ResponseEntity<String> topUpPedroCoins() {
+        Optional<MyUser> userOpt = userDataService.getLoggedInUser();
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        MyUser user = userOpt.get();
+        userDataService.addPedroCoins(user.getId(), 500);
+
+        return ResponseEntity.ok("500 pedro coins added to your account: " + user.getNickname());
+    }
+
 }
