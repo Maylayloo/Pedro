@@ -1,6 +1,8 @@
 package com.example.backend.user.controller;
 
 import com.example.backend.user.dto.FollowedUserDTO;
+import com.example.backend.user.model.Follow;
+import com.example.backend.user.model.MyUser;
 import com.example.backend.user.repository.FollowRepository;
 import com.example.backend.user.service.FollowService;
 import com.example.backend.user.service.UserDataService;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/follow")
@@ -71,5 +74,13 @@ public class FollowController {
                     return ResponseEntity.ok(followed);
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
+    @GetMapping("/myFollow/{nickName}")
+    public ResponseEntity<Map<String,Boolean>> checkIfIFollowThisStreamer(@PathVariable String nickName){
+        return new ResponseEntity<>(followService.checkIfStreamerIsFollowedByMeByStreamerNickName(nickName)
+                , HttpStatus.OK);
+
+
     }
 }

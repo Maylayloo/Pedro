@@ -94,6 +94,13 @@ public class StreamService {
         repo.deleteByRoomName(roomName);
     }
 
+    public void deleteStreamMetaDataByRoomName(String roomName) throws IOException {
+        ChatAndStreamConnector.deleteAllChatsByStreamId(roomName);
+        livePedroCoinService.removeByRoomName(roomName);
+        roomService.deleteRoomByRoomName(roomName);
+        repo.deleteByRoomName(roomName);
+    }
+
     public void deleteIngress(String roomName) throws IOException {
             IngressServiceClient ingressServiceClient = clientService.getIngress();
             Call<List<LivekitIngress.IngressInfo>> ingressCall = ingressServiceClient.listIngress();

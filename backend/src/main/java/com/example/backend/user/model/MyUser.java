@@ -101,4 +101,11 @@ public class MyUser {
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
     }
+
+    public void subtractCoins(int amount) {
+        if (pedroCoin < amount) {
+            throw new IllegalArgumentException("Nie masz wystarczająco PedroCoinów 😢");
+        }
+        this.pedroCoin -= amount;
+    }
 }

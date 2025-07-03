@@ -9,6 +9,7 @@ public class UserProfileDTO {
     private String description;
     private int pedroCoin;
     private String profilePictureUrl;
+    private boolean isStreaming;
 
 
     public UserProfileDTO() {}
@@ -20,6 +21,15 @@ public class UserProfileDTO {
         this.description = user.getDescription();
         this.pedroCoin = user.getPedroCoin();
         this.profilePictureUrl = user.getProfilePictureUrl();
+        this.isStreaming = user.isStatus();
+    }
+
+    public boolean isStreaming() {
+        return isStreaming;
+    }
+
+    public void setStreaming(boolean streaming) {
+        isStreaming = streaming;
     }
 
     public Long getId() {

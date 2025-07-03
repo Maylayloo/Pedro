@@ -1,6 +1,8 @@
 package com.example.backend.stream.service;
 
+import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.message.UserAndStreamConnectorService;
+import com.example.backend.stream.model.Stream;
 import io.livekit.server.IngressServiceClient;
 import livekit.LivekitIngress;
 import org.hibernate.annotations.SecondaryRow;
@@ -28,23 +30,32 @@ public class StreamScheduler {
         IngressServiceClient client = clientService.getIngress();
         List<LivekitIngress.IngressInfo> ingresses = client.listIngress().execute().body();
         long nowEpochSeconds = System.currentTimeMillis() / 1000;
-        long fiveMinutesInSeconds = 60;
-        for (LivekitIngress.IngressInfo ingress : ingresses) {
+        long OneMinutesInSeconds = 60;
+        List<StreamDto> streams = streamService.getAllStreams();
 
-            boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
-            System.out.println("deleteing stream with room name:"+ingress.getRoomName());
-            long createdAt=0;
-            try{
-                createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());
-            }
-            catch (Exception e){
-                streamService.deleteIngress(ingress.getRoomName());
-            }
-            boolean isOlderThan1Min = nowEpochSeconds - createdAt> fiveMinutesInSeconds;
+        for(StreamDto stream:streams){
+            if(ingresses!=null){
+                for (LivekitIngress.IngressInfo ingress : ingresses) {
+                    ingress:if(ingress.getRoomName().equals(stream.getRoomName())){
+                        boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
+                        long createdAt=0;
+                        try{
+                            createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());
+                        }
+                        catch (Exception e){
+                            break ingress;
+                        }
 
-            if (isInactive && isOlderThan1Min) {
-               streamService.deleteStreamByRoomName(ingress.getRoomName());
+                        boolean isOlderThan1Min = nowEpochSeconds - createdAt> OneMinutesInSeconds;
+                        if (isInactive && isOlderThan1Min) {
+                            System.out.println("deleteing stream with room name:"+ingress.getRoomName());
+                            streamService.deleteStreamByRoomName(ingress.getRoomName());
+                        }
+                    }
+
+                }
             }
+
         }
         System.out.println("Ended cleaning inactive streams.");
     }

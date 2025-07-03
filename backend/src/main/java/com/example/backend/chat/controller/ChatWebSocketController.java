@@ -77,6 +77,8 @@ public class ChatWebSocketController {
     private void handleDonateMessage(ChatSocketRequestDTO dto, Long streamId, MyUser sender) {
         int amount = dto.getAmount();
 
+        userDataService.subtractPedroCoins(sender.getId(), amount);
+
         livePedroCoinService.donateStreamerWithcoinAmountByStreamId(streamId, amount);
 
         int totalCoins = livePedroCoinService.getPedrocoinValueByStreamId(streamId);
