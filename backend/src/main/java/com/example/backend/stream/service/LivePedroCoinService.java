@@ -5,6 +5,7 @@ import com.example.backend.stream.model.LivePedroCoin;
 import com.example.backend.stream.model.Stream;
 import com.example.backend.stream.repo.LivePedrocoinRepo;
 import com.example.backend.stream.repo.StreamRepo;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,6 @@ public class LivePedroCoinService {
     public void removeByStreamId(Long streamid){
         livePedrocoinRepo.removeByStream_Id(streamid);
     }
-
     public void removeByRoomName(String roomName) {
         Stream s=streamrepo.findByRoomName(roomName);
         removeByStreamId(s.getId());

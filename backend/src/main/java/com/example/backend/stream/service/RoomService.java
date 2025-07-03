@@ -3,6 +3,7 @@ package com.example.backend.stream.service;
 import com.example.backend.stream.dto.RoomDto;
 import com.google.protobuf.util.JsonFormat;
 import io.livekit.server.RoomServiceClient;
+import jakarta.transaction.Transactional;
 import livekit.LivekitModels;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

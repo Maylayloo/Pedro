@@ -32,15 +32,18 @@ public class StreamService {
     private final StreamRepo repo;
     private final ParticipantService participantService;
     private final LivePedroCoinService livePedroCoinService;
-
+    private final ChatAndStreamConnector chatAndStreamConnector;
     public StreamService(ClientService clientService,
                          RoomService roomService, StreamRepo repo, ParticipantService participantService,
-                         LivePedroCoinService PedroCoinService ) {
+                         LivePedroCoinService PedroCoinService,
+                         ChatAndStreamConnector chatAndStreamConnector
+    ) {
         this.clientService = clientService;
         this.roomService = roomService;
         this.repo=repo;
         this.participantService=participantService;
         this.livePedroCoinService=PedroCoinService;
+        this.chatAndStreamConnector=chatAndStreamConnector;
     }
 
     public ObsDataDto createStreamAndReturnObsData(StreamRequestDto dto) throws IOException {
@@ -87,15 +90,15 @@ public class StreamService {
     }
     @Transactional
     public void deleteStreamByRoomName(String roomName) throws IOException {
-        ChatAndStreamConnector.deleteAllChatsByStreamId(roomName);
+        chatAndStreamConnector.deleteAllChatsByStreamId(roomName);
         livePedroCoinService.removeByRoomName(roomName);
         deleteIngress(roomName);
         roomService.deleteRoomByRoomName(roomName);
         repo.deleteByRoomName(roomName);
     }
-
+    @Transactional
     public void deleteStreamMetaDataByRoomName(String roomName) throws IOException {
-        ChatAndStreamConnector.deleteAllChatsByStreamId(roomName);
+        chatAndStreamConnector.deleteAllChatsByStreamId(roomName);
         livePedroCoinService.removeByRoomName(roomName);
         roomService.deleteRoomByRoomName(roomName);
         repo.deleteByRoomName(roomName);

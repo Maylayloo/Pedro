@@ -32,11 +32,15 @@ public class StreamScheduler {
         long nowEpochSeconds = System.currentTimeMillis() / 1000;
         long OneMinutesInSeconds = 60;
         List<StreamDto> streams = streamService.getAllStreams();
+        if (!streams.isEmpty()) {
 
+        }
         for(StreamDto stream:streams){
+            boolean found = false;
             if(ingresses!=null){
                 for (LivekitIngress.IngressInfo ingress : ingresses) {
                     ingress:if(ingress.getRoomName().equals(stream.getRoomName())){
+                        found = true;
                         boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
                         long createdAt=0;
                         try{
@@ -54,6 +58,9 @@ public class StreamScheduler {
                     }
 
                 }
+            }
+            if(!found){
+                streamService.deleteStreamMetaDataByRoomName(stream.getRoomName());
             }
 
         }
