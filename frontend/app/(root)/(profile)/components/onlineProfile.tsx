@@ -1,6 +1,6 @@
 import StreamRoom from "@/app/(root)/(profile)/components/streamRoom";
 
-const OnlineProfile = async ({username,}: props) => {
+const OnlineProfile = async ({username, userId}: props) => {
 
     // Only guests for now
     const identity = `guest-${Date.now()}`;
@@ -30,6 +30,12 @@ const OnlineProfile = async ({username,}: props) => {
 
     const streamData = await res2.json()
 
+    if (streamData) {
+        console.log(streamData)
+    } else {
+        return <NotFound/>
+    }
+
     console.log(streamData)
 
     if (!res.ok || !res2.ok) return <NotFound/>;
@@ -43,6 +49,7 @@ const OnlineProfile = async ({username,}: props) => {
                     username={streamData.roomName}
                     title={streamData.title}
                     category={streamData.category}
+                    userId={userId}
                 />
             </div>
 
@@ -56,11 +63,12 @@ const OnlineProfile = async ({username,}: props) => {
 };
 
 import NotFound from "@/app/not-found";
-import Chat from "@/app/components/chat";
+import Chat from "@/app/(root)/(profile)/components/chat";
 import StreamInfo from "@/app/(root)/(profile)/components/streamInfo";
 
 interface props {
-    username: string;
+    username: string,
+    userId: number,
 }
 
 export default OnlineProfile;
