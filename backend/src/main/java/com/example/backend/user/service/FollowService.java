@@ -1,5 +1,6 @@
 package com.example.backend.user.service;
 
+import com.example.backend.user.dto.FollowedUserDTO;
 import com.example.backend.user.model.Follow;
 import com.example.backend.user.model.MyUser;
 import com.example.backend.user.repository.FollowRepository;
@@ -7,6 +8,9 @@ import com.example.backend.user.repository.MyUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FollowService {
@@ -65,5 +69,12 @@ public class FollowService {
         MyUser user = myUserRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return followRepository.countByFollower(user);
+    }
+
+    public Boolean checkIfStreamerIsFollowedByMeByStreamerNickName(String nickName) {
+        Optional<MyUser> currentUser = userDataService.getLoggedInUser();
+        List<FollowedUserDTO> followed=followRepository.findFollowedUsersWithStatus(currentUser.get().getId());
+        return followed.stream()
+                .anyMatch(f -> f.nickname().equalsIgnoreCase(nickName));
     }
 }

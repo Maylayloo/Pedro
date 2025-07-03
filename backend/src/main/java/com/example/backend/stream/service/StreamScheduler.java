@@ -1,6 +1,8 @@
 package com.example.backend.stream.service;
 
+import com.example.backend.stream.dto.StreamDto;
 import com.example.backend.stream.message.UserAndStreamConnectorService;
+import com.example.backend.stream.model.Stream;
 import io.livekit.server.IngressServiceClient;
 import livekit.LivekitIngress;
 import org.hibernate.annotations.SecondaryRow;
@@ -29,14 +31,23 @@ public class StreamScheduler {
         List<LivekitIngress.IngressInfo> ingresses = client.listIngress().execute().body();
         long nowEpochSeconds = System.currentTimeMillis() / 1000;
         long OneMinutesInSeconds = 60;
-        for (LivekitIngress.IngressInfo ingress : ingresses) {
-            boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
-            Long createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());
-            boolean isOlderThan1Min = nowEpochSeconds - createdAt> OneMinutesInSeconds;
-            if (isInactive && isOlderThan1Min) {
-                System.out.println("deleteing stream with room name:"+ingress.getRoomName());
-                streamService.deleteStreamByRoomName(ingress.getRoomName());
+        List<StreamDto> streams = streamService.getAllStreams();
+        for(StreamDto stream:streams){
+            if(ingresses!=null){
+                for (LivekitIngress.IngressInfo ingress : ingresses) {
+                    if(ingress.getRoomName().equals(stream.getRoomName())){
+                        boolean isInactive = ingress.getState().getStatus() == LivekitIngress.IngressState.Status.ENDPOINT_INACTIVE;
+                        Long createdAt = streamService.getCreationTimeByIngress(ingress.getIngressId());
+                        boolean isOlderThan1Min = nowEpochSeconds - createdAt> OneMinutesInSeconds;
+                        if (isInactive && isOlderThan1Min) {
+                            System.out.println("deleteing stream with room name:"+ingress.getRoomName());
+                            streamService.deleteStreamByRoomName(ingress.getRoomName());
+                        }
+                    }
+
+                }
             }
+
         }
         System.out.println("Ended cleaning inactive streams.");
     }
