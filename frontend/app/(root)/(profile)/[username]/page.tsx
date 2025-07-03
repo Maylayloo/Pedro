@@ -1,19 +1,35 @@
-import OfflineProfile from "@/app/(root)/(profile)/components/offlineProfile";
 import OnlineProfile from "@/app/(root)/(profile)/components/onlineProfile";
+import OfflineProfile from "@/app/(root)/(profile)/components/offlineProfile";
+import NotFound from "@/app/not-found";
+const UserPage = async ({ params }: { params: Promise<{ username: string }> }) => {
+    const { username } = await params;
 
+    const res = await fetch(`http://localhost:8080/user/nick/${username}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
 
-const UserPage = async ({params}: { params: Promise<{ username: string }> }) => {
+    if (res.status === 404) {
+        return <NotFound />;
+    }
 
-    const { username } = await params
+    if (!res.ok) {
+        console.error("Błąd HTTP:", res.status);
+        return <NotFound />
+    }
 
+    const fetchedData = await res.json();
 
-    // for now
-    const status = "online";
+    if (!fetchedData) return <NotFound />;
 
-
-    return status === "online" ?
-        <OnlineProfile username={username}/>
-        : <OfflineProfile username={username}/>
+    return fetchedData.streaming ? (
+        <OnlineProfile username={username} userId={fetchedData.id} />
+    ) : (
+        <OfflineProfile username={username} userId={fetchedData.id} />
+    );
 };
 
 export default UserPage;
